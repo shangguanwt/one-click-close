@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- OneClickClose premium optimizer theme: deep navy glass + electric blue. -->
+    <x:Double x:Key="SpacingXSmall">4</x:Double>
+    <x:Double x:Key="SpacingSmall">8</x:Double>
+    <x:Double x:Key="SpacingMedium">12</x:Double>
+    <x:Double x:Key="SpacingLarge">16</x:Double>
+    <x:Double x:Key="SpacingXLarge">24</x:Double>
+    <x:Double x:Key="SpacingXXLarge">32</x:Double>
+
+    <CornerRadius x:Key="ControlRadius">10</CornerRadius>
+    <CornerRadius x:Key="SmallRadius">8</CornerRadius>
+    <CornerRadius x:Key="CardRadius">18</CornerRadius>
+    <CornerRadius x:Key="BadgeRadius">14</CornerRadius>
+    <CornerRadius x:Key="WindowRadius">22</CornerRadius>
+
+    <SolidColorBrush x:Key="BaseBrush" Color="#030812"/>
+    <SolidColorBrush x:Key="ContentBrush" Color="#07101B"/>
+    <SolidColorBrush x:Key="SurfaceBrush" Color="#0B1726"/>
+    <SolidColorBrush x:Key="CardBrush" Color="#0E1A2A"/>
+    <SolidColorBrush x:Key="SurfaceElevatedBrush" Color="#12243A"/>
+    <SolidColorBrush x:Key="PaneBrush" Color="#050B14"/>
+    <SolidColorBrush x:Key="HoverBrush" Color="#132A44"/>
+    <SolidColorBrush x:Key="StrokeBrush" Color="#1D314A"/>
+    <SolidColorBrush x:Key="StrokeHoverBrush" Color="#2F5075"/>
+    <SolidColorBrush x:Key="DividerBrush" Color="#102235"/>
+    <SolidColorBrush x:Key="DividerSolidBrush" Color="#1D314A"/>
+
+    <SolidColorBrush x:Key="TitleTextBrush" Color="#F5F8FF"/>
+    <SolidColorBrush x:Key="BodyTextBrush" Color="#C8D3E0"/>
+    <SolidColorBrush x:Key="MutedTextBrush" Color="#92A1B4"/>
+    <SolidColorBrush x:Key="SubtleTextBrush" Color="#63738A"/>
+
+    <SolidColorBrush x:Key="SafeBrush" Color="#38E07B"/>
+    <SolidColorBrush x:Key="SafeSoftBrush" Color="#2038E07B"/>
+    <SolidColorBrush x:Key="CopperBrush" Color="#F59E0B"/>
+    <SolidColorBrush x:Key="CopperSoftBrush" Color="#22F59E0B"/>
+    <SolidColorBrush x:Key="DangerBrush" Color="#FF5252"/>
+    <SolidColorBrush x:Key="DangerSoftBrush" Color="#22FF5252"/>
+    <SolidColorBrush x:Key="AccentBrush" Color="#2F7BFF"/>
+    <SolidColorBrush x:Key="PrimaryBrush" Color="#2F7BFF"/>
+    <SolidColorBrush x:Key="AccentLightBrush" Color="#55C7FF"/>
+    <SolidColorBrush x:Key="PurpleBrush" Color="#8B5CF6"/>
+    <SolidColorBrush x:Key="PurpleSoftBrush" Color="#228B5CF6"/>
+    <SolidColorBrush x:Key="CyanSoftBrush" Color="#1A55C7FF"/>
+
+    <LinearGradientBrush x:Key="WindowGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#030812" Offset="0"/>
+        <GradientStop Color="#07111F" Offset="0.45"/>
+        <GradientStop Color="#0A1424" Offset="1"/>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="CardGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#14243A" Offset="0"/>
+        <GradientStop Color="#0B1726" Offset="1"/>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="PrimaryGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#35A6FF" Offset="0"/>
+        <GradientStop Color="#2F7BFF" Offset="0.55"/>
+        <GradientStop Color="#7657FF" Offset="1"/>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="SidebarSelectedBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#224E9A" Offset="0"/>
+        <GradientStop Color="#12356E" Offset="1"/>
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="MemoryRingGradientBrush" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="#55C7FF" Offset="0"/>
+        <GradientStop Color="#2F7BFF" Offset="0.55"/>
+        <GradientStop Color="#8B5CF6" Offset="1"/>
+    </LinearGradientBrush>
+
+    <!-- Backward-compatible aliases used by older pages. -->
+    <SolidColorBrush x:Key="HeaderBarBrush" Color="#0B1726"/>
+    <SolidColorBrush x:Key="RowItemBrush" Color="#0B1726"/>
+    <SolidColorBrush x:Key="RowHoverBrush" Color="#132A44"/>
+    <SolidColorBrush x:Key="InlineMutedBrush" Color="#63738A"/>
+    <SolidColorBrush x:Key="EmptyIconBrush" Color="#1D314A"/>
+    <SolidColorBrush x:Key="ProtectBadgeBgBrush" Color="#2038E07B"/>
+    <SolidColorBrush x:Key="SuccessBgBrush" Color="#2038E07B"/>
+    <SolidColorBrush x:Key="ContentAreaBrush" Color="#07101B"/>
+    <SolidColorBrush x:Key="PaneAreaBrush" Color="#050B14"/>
+    <SolidColorBrush x:Key="MutedSoftBrush" Color="#151F2D"/>
+
+    <!-- WinUI control resource overrides. -->
+    <SolidColorBrush x:Key="TextControlBackground" Color="#0B1726"/>
+    <SolidColorBrush x:Key="TextControlBackgroundPointerOver" Color="#102238"/>
+    <SolidColorBrush x:Key="TextControlBackgroundFocused" Color="#0B1726"/>
+    <SolidColorBrush x:Key="TextControlForeground" Color="#F5F8FF"/>
+    <SolidColorBrush x:Key="TextControlForegroundPointerOver" Color="#F5F8FF"/>
+    <SolidColorBrush x:Key="TextControlForegroundFocused" Color="#F5F8FF"/>
+    <SolidColorBrush x:Key="TextControlPlaceholderForeground" Color="#63738A"/>
+    <SolidColorBrush x:Key="TextControlPlaceholderForegroundPointerOver" Color="#63738A"/>
+    <SolidColorBrush x:Key="TextControlPlaceholderForegroundFocused" Color="#63738A"/>
+    <SolidColorBrush x:Key="TextControlBorderBrush" Color="#1D314A"/>
+    <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#2F5075"/>
+    <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#2F7BFF"/>
+    <SolidColorBrush x:Key="TextControlSelectionHighlightColor" Color="#2F7BFF"/>
+    <SolidColorBrush x:Key="TextControlSelectionHighlightColors" Color="#2F7BFF"/>
+
+    <SolidColorBrush x:Key="ListViewItemBackgroundPointerOver" Color="#132A44"/>
+    <SolidColorBrush x:Key="ListViewItemBackgroundSelected" Color="#102238"/>
+    <SolidColorBrush x:Key="ListViewItemBackgroundSelectedPointerOver" Color="#132A44"/>
+    <SolidColorBrush x:Key="ListViewItemForeground" Color="#C8D3E0"/>
+    <SolidColorBrush x:Key="ListViewItemForegroundPointerOver" Color="#F5F8FF"/>
+    <SolidColorBrush x:Key="ComboBoxBackground" Color="#0B1726"/>
+    <SolidColorBrush x:Key="ComboBoxBackgroundPointerOver" Color="#102238"/>
+    <SolidColorBrush x:Key="ComboBoxBorderBrush" Color="#1D314A"/>
+    <SolidColorBrush x:Key="ComboBoxForeground" Color="#C8D3E0"/>
+
+    <Style x:Key="HeroTitleStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="38"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="LineHeight" Value="46"/>
+        <Setter Property="Foreground" Value="{StaticResource TitleTextBrush}"/>
+    </Style>
+    <Style x:Key="PageTitleStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="28"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{StaticResource TitleTextBrush}"/>
+    </Style>
+    <Style x:Key="SectionTitleStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="18"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{StaticResource TitleTextBrush}"/>
+    </Style>
+    <Style x:Key="SubTitleStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Foreground" Value="{StaticResource MutedTextBrush}"/>
+    </Style>
+    <Style x:Key="BodyTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="Foreground" Value="{StaticResource BodyTextBrush}"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+    <Style x:Key="CaptionStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Foreground" Value="{StaticResource SubtleTextBrush}"/>
+    </Style>
+    <Style x:Key="MutedTextStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="13"/>
+        <Setter Property="Foreground" Value="{StaticResource MutedTextBrush}"/>
+        <Setter Property="TextWrapping" Value="Wrap"/>
+    </Style>
+    <Style x:Key="MetricNumberStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="34"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="Foreground" Value="{StaticResource TitleTextBrush}"/>
+    </Style>
+    <Style x:Key="MonoTextStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="Cascadia Code,Consolas"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Foreground" Value="{StaticResource SubtleTextBrush}"/>
+    </Style>
+    <Style x:Key="ColumnHeaderStyle" TargetType="TextBlock">
+        <Setter Property="Foreground" Value="{StaticResource SubtleTextBrush}"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+    </Style>
+
+    <Style x:Key="CardBorderStyle" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource CardBrush}"/>
+        <Setter Property="CornerRadius" Value="{StaticResource CardRadius}"/>
+        <Setter Property="Padding" Value="22"/>
+        <Setter Property="BorderBrush" Value="{StaticResource StrokeBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+    <Style x:Key="ElevatedCardStyle" TargetType="Border" BasedOn="{StaticResource CardBorderStyle}">
+        <Setter Property="Background" Value="{StaticResource CardGradientBrush}"/>
+        <Setter Property="Padding" Value="28"/>
+    </Style>
+    <Style x:Key="StatCardStyle" TargetType="Border" BasedOn="{StaticResource CardBorderStyle}">
+        <Setter Property="Padding" Value="18"/>
+    </Style>
+    <Style x:Key="MetricCardStyle" TargetType="Border" BasedOn="{StaticResource CardBorderStyle}">
+        <Setter Property="Padding" Value="18"/>
+        <Setter Property="MinHeight" Value="132"/>
+    </Style>
+    <Style x:Key="StatusTagStyle" TargetType="Border">
+        <Setter Property="CornerRadius" Value="{StaticResource BadgeRadius}"/>
+        <Setter Property="Padding" Value="10,4"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+    </Style>
+    <Style x:Key="TagBadgeStyle" TargetType="Border" BasedOn="{StaticResource StatusTagStyle}"/>
+    <Style x:Key="HeaderBarStyle" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource CardBrush}"/>
+        <Setter Property="CornerRadius" Value="{StaticResource ControlRadius}"/>
+        <Setter Property="Padding" Value="16,10"/>
+    </Style>
+    <Style x:Key="ListItemStyle" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
+        <Setter Property="CornerRadius" Value="{StaticResource ControlRadius}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource StrokeBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="16,10"/>
+        <Setter Property="Margin" Value="0,0,0,4"/>
+    </Style>
+    <Style x:Key="SubtleTextBoxStyle" TargetType="TextBox">
+        <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
+        <Setter Property="Foreground" Value="{StaticResource BodyTextBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource StrokeBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="CornerRadius" Value="{StaticResource ControlRadius}"/>
+        <Setter Property="Padding" Value="12,7"/>
+        <Setter Property="FontSize" Value="13"/>
+    </Style>
+
+    <Style x:Key="SidebarNavButtonStyle" TargetType="Button">
+        <Setter Property="MinHeight" Value="46"/>
+        <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+        <Setter Property="Padding" Value="14,0"/>
+        <Setter Property="CornerRadius" Value="14"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Foreground" Value="White"/>
+    </Style>
+    <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+        <Setter Property="Foreground" Value="White"/>
+        <Setter Property="CornerRadius" Value="16"/>
+        <Setter Property="Padding" Value="22,12"/>
+        <Setter Property="FontWeight" Value="SemiBold"/>
+        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="Background" Value="{StaticResource PrimaryGradientBrush}"/>
+    </Style>
+    <Style x:Key="DangerButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+        <Setter Property="Background" Value="{StaticResource DangerBrush}"/>
+    </Style>
+    <Style x:Key="CopperButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+        <Setter Property="Background" Value="{StaticResource CopperBrush}"/>
+    </Style>
+    <Style x:Key="SubtleButtonStyle" TargetType="Button">
+        <Setter Property="Foreground" Value="{StaticResource BodyTextBrush}"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Padding" Value="16,9"/>
+        <Setter Property="FontSize" Value="14"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="BorderBrush" Value="{StaticResource StrokeBrush}"/>
+        <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
+    </Style>
+    <Style x:Key="TableActionButtonStyle" TargetType="Button" BasedOn="{StaticResource SubtleButtonStyle}">
+        <Setter Property="MinWidth" Value="66"/>
+        <Setter Property="Padding" Value="13,6"/>
+        <Setter Property="FontSize" Value="12"/>
+        <Setter Property="Foreground" Value="#FFFFFF"/>
+        <Setter Property="Background" Value="{StaticResource PrimaryBrush}"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="CornerRadius" Value="12"/>
+    </Style>
+    <Style x:Key="StatusDotStyle" TargetType="Ellipse">
+        <Setter Property="Width" Value="8"/>
+        <Setter Property="Height" Value="8"/>
+    </Style>
+</ResourceDictionary>

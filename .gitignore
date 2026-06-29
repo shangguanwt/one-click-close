@@ -1,0 +1,20 @@
+﻿bin/
+obj/
+release/*.exe
+release/*.zip
+release/close-user-apps.config.json
+release/*.TMP
+release/package/
+release/*.png
+*.user
+*.suo
+.vs/
+Thumbs.db
+Desktop.ini
+
+# Agent / tooling artifacts
+.agent/
+.agent_todos.json
+.metis/
+spark-output/
+METIS.md

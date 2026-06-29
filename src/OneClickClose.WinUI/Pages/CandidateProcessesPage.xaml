@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Page
+    x:Class="OneClickClose.WinUI.Pages.CandidateProcessesPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="Transparent">
+
+    <Grid Padding="4,0" RowSpacing="16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Title + count -->
+        <StackPanel Orientation="Horizontal" Spacing="10">
+            <TextBlock Text="候选进程" Style="{StaticResource PageTitleStyle}"/>
+            <Border x:Name="CountBadge" Background="{StaticResource SurfaceElevatedBrush}" CornerRadius="4"
+                    Padding="8,3" VerticalAlignment="Center" Visibility="Collapsed"
+                    BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1">
+                <TextBlock x:Name="CountText" Foreground="{StaticResource BodyTextBrush}"
+                           FontSize="12" FontWeight="Medium"/>
+            </Border>
+        </StackPanel>
+
+        <!-- Search / Filter toolbar -->
+        <Grid Grid.Row="1" ColumnSpacing="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="SearchBox" PlaceholderText="搜索进程名..." TextChanged="SearchBox_TextChanged"
+                     FontSize="13" CornerRadius="8"/>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="2">
+                <Button x:Name="FilterAllBtn" Content="全部" Click="FilterAllBtn_Click"
+                        CornerRadius="6" Padding="10,6" FontSize="12" FontWeight="SemiBold"/>
+                <Button x:Name="FilterGracefulBtn" Content="温和" Click="FilterGracefulBtn_Click"
+                        CornerRadius="6" Padding="10,6" FontSize="12"/>
+                <Button x:Name="FilterForceBtn" Content="强制" Click="FilterForceBtn_Click"
+                        CornerRadius="6" Padding="10,6" FontSize="12"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- Column header -->
+        <Border Grid.Row="2" Style="{StaticResource HeaderBarStyle}">
+            <Grid ColumnSpacing="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2.5*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="0.6*"/>
+                    <ColumnDefinition Width="0.8*"/>
+                    <ColumnDefinition Width="0.6*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="进程" Style="{StaticResource ColumnHeaderStyle}"/>
+                <TextBlock Grid.Column="1" Text="操作" Style="{StaticResource ColumnHeaderStyle}"/>
+                <TextBlock Grid.Column="2" Text="数量" Style="{StaticResource ColumnHeaderStyle}"/>
+                <TextBlock Grid.Column="3" Text="内存" Style="{StaticResource ColumnHeaderStyle}"/>
+                <TextBlock Grid.Column="4" Text="风险" Style="{StaticResource ColumnHeaderStyle}"/>
+            </Grid>
+        </Border>
+
+        <!-- Process list -->
+        <ScrollViewer Grid.Row="3">
+            <ItemsControl x:Name="ProcessList">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="{StaticResource SurfaceBrush}" CornerRadius="8"
+                                Padding="16,10" Margin="0,0,0,3"
+                                BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1"
+Opacity="{Binding Opacity}">
+                            <Border.ContextFlyout>
+                                <MenuFlyout>
+                                    <MenuFlyoutItem Text="添加到保护名单" Click="AddToProtected_Click" Tag="{Binding}">
+                                        <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE72E;"/></MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutItem Text="添加到强制清理" Click="AddToForce_Click" Tag="{Binding}">
+                                        <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE711;"/></MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                    <MenuFlyoutSeparator/>
+                                    <MenuFlyoutItem Text="从目标名单移除" Click="RemoveFromTarget_Click" Tag="{Binding}">
+                                        <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE74D;"/></MenuFlyoutItem.Icon>
+                                    </MenuFlyoutItem>
+                                </MenuFlyout>
+                            </Border.ContextFlyout>
+
+                            <Grid ColumnSpacing="8">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2.5*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="0.6*"/>
+                                    <ColumnDefinition Width="0.8*"/>
+                                    <ColumnDefinition Width="0.6*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <StackPanel Grid.Column="0" Spacing="1">
+                                    <TextBlock Text="{Binding Process}"
+                                               Foreground="{StaticResource TitleTextBrush}"
+                                               FontSize="13" FontWeight="Medium"/>
+                                    <TextBlock Text="{Binding Note}"
+                                               Foreground="{StaticResource SubtleTextBrush}"
+                                               FontSize="11" TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+
+                                <!-- Low-saturation tag badge -->
+                                <Border Grid.Column="1" Style="{StaticResource TagBadgeStyle}"
+                                        Background="{Binding ActionColor}">
+                                    <TextBlock Text="{Binding Action}"
+                                               Foreground="{StaticResource BodyTextBrush}" FontSize="11"/>
+                                </Border>
+
+                                <TextBlock Grid.Column="2" Text="{Binding Count}"
+                                           Foreground="{StaticResource BodyTextBrush}" FontSize="13"
+                                           VerticalAlignment="Center"/>
+
+                                <TextBlock Grid.Column="3" Text="{Binding MemoryText}"
+                                           Foreground="{StaticResource MutedTextBrush}" FontSize="12"
+                                           VerticalAlignment="Center"/>
+
+                                <TextBlock Grid.Column="4" Text="{Binding RiskText}" FontSize="12"
+                                           Foreground="{Binding RiskColor}" VerticalAlignment="Center"
+                                           FontWeight="Medium"/>
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!-- Empty state -->
+        <Border x:Name="EmptyState" Grid.Row="3" Background="{StaticResource SurfaceBrush}"
+                CornerRadius="12" Padding="40" HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1">
+            <StackPanel Spacing="6" HorizontalAlignment="Center">
+                <FontIcon Glyph="&#xE9D5;" FontSize="36" Foreground="{StaticResource EmptyIconBrush}"
+                          HorizontalAlignment="Center"/>
+                <TextBlock x:Name="EmptyText" Text="点击「扫描进程」查看候选列表"
+                           Foreground="{StaticResource SubtleTextBrush}" FontSize="13"
+                           HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <!-- No results -->
+        <Border x:Name="NoResultsState" Grid.Row="3" Background="{StaticResource SurfaceBrush}"
+                CornerRadius="12" Padding="40" HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1" Visibility="Collapsed">
+            <StackPanel Spacing="6" HorizontalAlignment="Center">
+                <FontIcon Glyph="&#xE721;" FontSize="36" Foreground="{StaticResource EmptyIconBrush}"
+                          HorizontalAlignment="Center"/>
+                <TextBlock Text="没有匹配的进程" Foreground="{StaticResource SubtleTextBrush}" FontSize="13"
+                           HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Page>
