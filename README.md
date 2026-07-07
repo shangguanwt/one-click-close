@@ -1,7 +1,19 @@
+<a id="readme-zh"></a>
+
+<p align="center">
+  <kbd><a href="#readme-zh">中文</a></kbd>
+  <kbd><a href="#readme-en">English</a></kbd>
+  <kbd><a href="https://github.com/shangguanwt/one-click-close/releases/latest">下载 Release</a></kbd>
+</p>
+
+<p align="center">
+  <sub>默认中文展示；英文读者可点击上方 English 快捷入口。</sub>
+</p>
+
 # OneClickClose 一键关闭
 
-> 中文为主 / English follows  
-> OneClickClose 是一个本地优先的 WinUI 3 桌面工具，用来查看后台应用、解释关闭风险、按应用分组进程，并在用户确认后安全关闭低风险用户软件。  
+> 中文为主，英文版在文末 / Chinese first, English section below
+> OneClickClose 是一个本地优先的 WinUI 3 桌面工具，用来查看后台应用、解释关闭风险、按应用分组进程，并在用户确认后安全关闭低风险用户软件。
 > English: OneClickClose is a local-first WinUI 3 desktop utility for reviewing background apps, explaining cleanup risk, grouping processes, and closing low-risk user apps after confirmation.
 
 ![OneClickClose README Hero](docs/assets/readme-hero.png)
@@ -174,6 +186,51 @@ release/
 OneClickClose 不上传进程列表、清理记录、习惯学习数据或硬件温度。它也不是杀毒软件、广告拦截器、驱动修复工具或完整电脑管家。
 
 English: OneClickClose keeps runtime data local and is scoped to explainable background-app cleanup.
+
+<a id="readme-en"></a>
+
+## English README
+
+<p>
+  <kbd><a href="#readme-zh">Back to Chinese</a></kbd>
+  <kbd><a href="https://github.com/shangguanwt/one-click-close/releases/latest">Download Release</a></kbd>
+</p>
+
+OneClickClose is a local-first WinUI 3 desktop utility for reviewing background apps, explaining cleanup risk, grouping related processes, and closing low-risk user apps only after user confirmation.
+
+### Highlights
+
+- Groups background processes by app and shows PID, window title, path, memory, risk, and cleanup reason.
+- Shows common Chinese chat components such as Weixin, TIM, QQExternal, TXPlatform, and WeChatAppEx even when they are protected or skipped.
+- Separates closable, protected, skipped, and high-risk items before any cleanup action.
+- Keeps process data, cleanup history, habits, and hardware state on the local machine.
+- Ships as a portable Windows x64 zip with a root `OneClickClose.exe` launcher.
+
+### Download And Run
+
+1. Open the [latest GitHub Release](https://github.com/shangguanwt/one-click-close/releases/latest).
+2. Download `OneClickClose-v*-win-x64.zip`.
+3. Extract the whole folder.
+4. Run `OneClickClose.exe` from the extracted root folder.
+
+Do not move the `app/` folder away from the launcher. The real WinUI app payload lives at `app/OneClickClose.WinUI.exe`.
+
+### Build From Source
+
+```powershell
+dotnet restore .\OneClickClose.sln -p:RuntimeIdentifier=win-x64
+dotnet test .\OneClickClose.sln -c Release --no-restore -p:RuntimeIdentifier=win-x64
+dotnet build .\src\OneClickClose.WinUI\OneClickClose.WinUI.csproj -c Release --no-restore -p:RuntimeIdentifier=win-x64
+```
+
+### Documentation
+
+- [User Guide](docs/USAGE.md)
+- [Important Notes](docs/NOTES.md)
+- [FAQ](docs/FAQ.md)
+- [Development Guide](docs/DEVELOPMENT.md)
+- [GitHub Release Checklist](docs/GITHUB_RELEASE_CHECKLIST.md)
+- [Security Policy](SECURITY.md)
 
 ## License
 
