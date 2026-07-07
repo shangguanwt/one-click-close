@@ -46,6 +46,7 @@ env:
 jobs:
   build-test:
     runs-on: windows-latest
+    timeout-minutes: 25
 
     steps:
       - name: Checkout
@@ -60,7 +61,26 @@ jobs:
         run: dotnet restore OneClickClose.sln -p:RuntimeIdentifier=${{ env.RUNTIME_IDENTIFIER }}
 
       - name: Test
-        run: dotnet test OneClickClose.sln -c $env:BUILD_CONFIGURATION --no-restore -p:RuntimeIdentifier=$env:RUNTIME_IDENTIFIER
+        timeout-minutes: 8
+        run: |
+          New-Item -ItemType Directory -Force test-results | Out-Null
+          dotnet test tests\OneClickClose.Core.Tests\OneClickClose.Core.Tests.csproj `
+            -c $env:BUILD_CONFIGURATION `
+            --no-restore `
+            -p:RuntimeIdentifier=$env:RUNTIME_IDENTIFIER `
+            --logger "trx;LogFileName=core-tests.trx" `
+            --results-directory test-results `
+            --diag test-results\vstest.log `
+            --blame-hang `
+            --blame-hang-timeout 5m
 
       - name: Build WinUI
         run: dotnet build src\OneClickClose.WinUI\OneClickClose.WinUI.csproj -c $env:BUILD_CONFIGURATION --no-restore -p:RuntimeIdentifier=$env:RUNTIME_IDENTIFIER
+
+      - name: Upload test diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: test-results
+          if-no-files-found: ignore
