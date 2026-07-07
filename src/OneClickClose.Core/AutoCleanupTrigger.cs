@@ -20,7 +20,6 @@ namespace OneClickClose.Core
         private Timer _idleTimer;
         private Timer _scheduledTimer;
         private CancellationTokenSource _cts;
-        private IntPtr _messageWindowHandle;
         private bool _disposed;
 
         public event Action<string> OnCleanupTriggered;

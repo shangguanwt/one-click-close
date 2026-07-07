@@ -3,18 +3,64 @@ name: CI
 on:
   push:
     branches: [ main ]
+    paths:
+      - '.github/workflows/ci.yml'
+      - 'Directory.Build.props'
+      - 'README.md'
+      - 'CONTRIBUTING.md'
+      - 'SECURITY.md'
+      - 'docs/**'
+      - 'scripts/**'
+      - 'src/**'
+      - 'tests/**'
+      - 'OneClickClose.sln'
+      - 'close-user-apps.config.json'
   pull_request:
-    branches: [ main ]
+    paths:
+      - '.github/workflows/ci.yml'
+      - 'Directory.Build.props'
+      - 'README.md'
+      - 'CONTRIBUTING.md'
+      - 'SECURITY.md'
+      - 'docs/**'
+      - 'scripts/**'
+      - 'src/**'
+      - 'tests/**'
+      - 'OneClickClose.sln'
+      - 'close-user-apps.config.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  BUILD_CONFIGURATION: Release
+  RUNTIME_IDENTIFIER: win-x64
 
 jobs:
-  build:
+  build-test:
     runs-on: windows-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: 9.0.x
-    - name: Build
-      run: dotnet build OneClickClose.sln -c Release
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore
+        run: dotnet restore OneClickClose.sln -p:RuntimeIdentifier=${{ env.RUNTIME_IDENTIFIER }}
+
+      - name: Test
+        run: dotnet test OneClickClose.sln -c $env:BUILD_CONFIGURATION --no-restore -p:RuntimeIdentifier=$env:RUNTIME_IDENTIFIER
+
+      - name: Build WinUI
+        run: dotnet build src\OneClickClose.WinUI\OneClickClose.WinUI.csproj -c $env:BUILD_CONFIGURATION --no-restore -p:RuntimeIdentifier=$env:RUNTIME_IDENTIFIER

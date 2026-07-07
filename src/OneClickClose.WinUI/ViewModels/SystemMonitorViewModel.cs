@@ -1,6 +1,5 @@
-﻿using System;
+using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -15,46 +14,47 @@ namespace OneClickClose.WinUI.ViewModels;
 public partial class SystemMonitorViewModel : ObservableObject, IDisposable
 {
     private readonly DispatcherQueue _dispatcher;
-    private Timer _refreshTimer;
     private readonly SystemMonitor _monitor;
     private CancellationTokenSource _cancellationTokenSource;
+    private Task _monitoringTask;
 
-    [ObservableProperty]
     private long _totalMemoryMb;
-
-    [ObservableProperty]
     private long _usedMemoryMb;
-
-    [ObservableProperty]
     private float _cpuUsagePercent;
-
-    [ObservableProperty]
     private int _processCount;
-
-    [ObservableProperty]
     private ObservableCollection<ProcessResourceRecord> _topProcesses = new();
-
-    [ObservableProperty]
     private bool _isMonitoring;
-
-    // ── 新增指标 ──
-    [ObservableProperty]
     private float _gpuUsagePercent;
-
-    [ObservableProperty]
     private float _diskUsagePercent;
-
-    [ObservableProperty]
     private float _networkMbps;
-
-    [ObservableProperty]
     private float? _temperatureC;
-
-    [ObservableProperty]
+    private float? _cpuTemperatureC;
+    private float? _gpuTemperatureC;
+    private float? _motherboardTemperatureC;
+    private string _temperatureSource = string.Empty;
+    private string _temperatureUnavailableReason = string.Empty;
     private float? _batteryPercent;
-
-    [ObservableProperty]
     private bool _batteryPresent;
+    private int _sparklineVersion;
+
+    public long TotalMemoryMb { get => _totalMemoryMb; private set => SetProperty(ref _totalMemoryMb, value); }
+    public long UsedMemoryMb { get => _usedMemoryMb; private set => SetProperty(ref _usedMemoryMb, value); }
+    public float CpuUsagePercent { get => _cpuUsagePercent; private set => SetProperty(ref _cpuUsagePercent, value); }
+    public int ProcessCount { get => _processCount; private set => SetProperty(ref _processCount, value); }
+    public ObservableCollection<ProcessResourceRecord> TopProcesses { get => _topProcesses; private set => SetProperty(ref _topProcesses, value); }
+    public bool IsMonitoring { get => _isMonitoring; private set => SetProperty(ref _isMonitoring, value); }
+    public float GpuUsagePercent { get => _gpuUsagePercent; private set => SetProperty(ref _gpuUsagePercent, value); }
+    public float DiskUsagePercent { get => _diskUsagePercent; private set => SetProperty(ref _diskUsagePercent, value); }
+    public float NetworkMbps { get => _networkMbps; private set => SetProperty(ref _networkMbps, value); }
+    public float? TemperatureC { get => _temperatureC; private set => SetProperty(ref _temperatureC, value); }
+    public float? CpuTemperatureC { get => _cpuTemperatureC; private set => SetProperty(ref _cpuTemperatureC, value); }
+    public float? GpuTemperatureC { get => _gpuTemperatureC; private set => SetProperty(ref _gpuTemperatureC, value); }
+    public float? MotherboardTemperatureC { get => _motherboardTemperatureC; private set => SetProperty(ref _motherboardTemperatureC, value); }
+    public string TemperatureSource { get => _temperatureSource; private set => SetProperty(ref _temperatureSource, value); }
+    public string TemperatureUnavailableReason { get => _temperatureUnavailableReason; private set => SetProperty(ref _temperatureUnavailableReason, value); }
+    public float? BatteryPercent { get => _batteryPercent; private set => SetProperty(ref _batteryPercent, value); }
+    public bool BatteryPresent { get => _batteryPresent; private set => SetProperty(ref _batteryPresent, value); }
+    public int SparklineVersion { get => _sparklineVersion; private set => SetProperty(ref _sparklineVersion, value); }
 
     // ── 波形图数据缓冲区（最近 30 个采样点） ──
     private readonly SparklineBuffer _cpuSparkline = new(30);
@@ -80,10 +80,6 @@ public partial class SystemMonitorViewModel : ObservableObject, IDisposable
     /// <summary>电池 波形数据。</summary>
     public double[] BatterySparklineData => _batterySparkline.Data;
 
-    /// <summary>波形数据更新计数器，供 UI 绑定触发刷新。</summary>
-    [ObservableProperty]
-    private int _sparklineVersion;
-
     public SystemMonitorViewModel(DispatcherQueue dispatcher = null)
     {
         _dispatcher = dispatcher ?? DispatcherQueue.GetForCurrentThread();
@@ -94,10 +90,10 @@ public partial class SystemMonitorViewModel : ObservableObject, IDisposable
     [RelayCommand]
     public void StartMonitoring()
     {
-        if (_refreshTimer != null) return;
+        if (_monitoringTask != null) return;
         IsMonitoring = true;
         _cancellationTokenSource = new CancellationTokenSource();
-        _refreshTimer = new Timer(_ => _ = RefreshAsync(), null, TimeSpan.Zero, TimeSpan.FromSeconds(2));
+        _monitoringTask = RunMonitoringLoopAsync(_cancellationTokenSource.Token);
     }
 
     /// <summary>停止监控</summary>
@@ -105,20 +101,35 @@ public partial class SystemMonitorViewModel : ObservableObject, IDisposable
     public void StopMonitoring()
     {
         _cancellationTokenSource?.Cancel();
-        _refreshTimer?.Dispose();
-        _refreshTimer = null;
+        _cancellationTokenSource?.Dispose();
+        _cancellationTokenSource = null;
+        _monitoringTask = null;
         IsMonitoring = false;
     }
 
-    private async Task RefreshAsync()
+    private async Task RunMonitoringLoopAsync(CancellationToken token)
     {
-        if (_cancellationTokenSource?.Token.IsCancellationRequested ?? true)
-            return;
-
         try
         {
-            var snapshot = await _monitor.CaptureSnapshotAsync(_cancellationTokenSource.Token);
-            snapshot = await _monitor.CaptureExtendedMetricsAsync(snapshot, _cancellationTokenSource.Token);
+            using var timer = new PeriodicTimer(TimeSpan.FromSeconds(2));
+            await RefreshAsync(token);
+            while (await timer.WaitForNextTickAsync(token))
+            {
+                await RefreshAsync(token);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // Expected on stop
+        }
+    }
+
+    private async Task RefreshAsync(CancellationToken token)
+    {
+        try
+        {
+            var snapshot = await _monitor.CaptureSnapshotAsync(token);
+            snapshot = await _monitor.CaptureExtendedMetricsAsync(snapshot, token);
 
             _dispatcher.TryEnqueue(() =>
             {
@@ -131,6 +142,11 @@ public partial class SystemMonitorViewModel : ObservableObject, IDisposable
                 DiskUsagePercent = snapshot.DiskUsagePercent;
                 NetworkMbps = snapshot.NetworkMbps;
                 TemperatureC = snapshot.TemperatureC;
+                CpuTemperatureC = snapshot.CpuTemperatureC;
+                GpuTemperatureC = snapshot.GpuTemperatureC;
+                MotherboardTemperatureC = snapshot.MotherboardTemperatureC;
+                TemperatureSource = snapshot.TemperatureSource ?? string.Empty;
+                TemperatureUnavailableReason = snapshot.TemperatureUnavailableReason ?? string.Empty;
                 BatteryPercent = snapshot.BatteryPercent;
                 BatteryPresent = snapshot.BatteryPresent;
 
@@ -160,15 +176,12 @@ public partial class SystemMonitorViewModel : ObservableObject, IDisposable
         }
         catch
         {
-            // Ignore transient errors
+            // Ignore transient metric collection errors
         }
     }
 
     public void Dispose()
     {
-        _cancellationTokenSource?.Cancel();
-        _cancellationTokenSource?.Dispose();
-        _refreshTimer?.Dispose();
+        StopMonitoring();
     }
 }
-

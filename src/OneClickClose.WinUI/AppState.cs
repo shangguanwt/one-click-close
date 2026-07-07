@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using OneClickClose.Core;
 
@@ -17,6 +18,7 @@ public class AppState : INotifyPropertyChanged
     public static AppState Instance => _instance ??= new AppState();
 
     public event PropertyChangedEventHandler PropertyChanged;
+    public static event EventHandler<string> NavigationRequested;
 
     // ── Backing fields ──
 
@@ -25,6 +27,7 @@ public class AppState : INotifyPropertyChanged
     private bool _isExecuting;
     private List<ProcessGroupRow> _candidateRows;
     private List<ProcessGroupRow> _protectedRows;
+    private List<ProcessGroupRow> _allProcessRows;
     private CloseResult _lastResult;
     private UserPreferencesStore _preferences;
 
@@ -70,6 +73,12 @@ public class AppState : INotifyPropertyChanged
         set => Instance.SetProtectedRows(value);
     }
 
+    public static List<ProcessGroupRow> AllProcessRows
+    {
+        get => Instance._allProcessRows;
+        set => Instance.SetAllProcessRows(value);
+    }
+
     public static CloseResult LastResult
     {
         get => Instance._lastResult;
@@ -92,6 +101,16 @@ public class AppState : INotifyPropertyChanged
 
     public static string ConfigPath => Instance.ConfigPathInstance;
 
+    public static void RequestNavigation(string tag)
+    {
+        if (string.IsNullOrWhiteSpace(tag))
+        {
+            return;
+        }
+
+        NavigationRequested?.Invoke(Instance, tag);
+    }
+
     // ── Instance setters that raise PropertyChanged ──
 
     private void SetCurrentPlan(ClosePlan value) => SetProperty(ref _currentPlan, value);
@@ -99,6 +118,7 @@ public class AppState : INotifyPropertyChanged
     private void SetIsExecuting(bool value) => SetProperty(ref _isExecuting, value);
     private void SetCandidateRows(List<ProcessGroupRow> value) => SetProperty(ref _candidateRows, value);
     private void SetProtectedRows(List<ProcessGroupRow> value) => SetProperty(ref _protectedRows, value);
+    private void SetAllProcessRows(List<ProcessGroupRow> value) => SetProperty(ref _allProcessRows, value);
     private void SetLastResult(CloseResult value) => SetProperty(ref _lastResult, value);
 
     // ── Operations ──
@@ -106,20 +126,45 @@ public class AppState : INotifyPropertyChanged
     public static void Scan(string configPath)
     {
         var plan = ProcessPlanner.GetClosePlan(configPath);
+        ApplyPreferenceHints(plan);
         CurrentPlan = plan;
         LastScanTime = DateTime.Now;
         CandidateRows = ProcessPlanner.GroupRows(plan.Candidates ?? new List<ProcessRecord>());
         ProtectedRows = ProcessPlanner.GroupRows(plan.Protected ?? new List<ProcessRecord>());
+        AllProcessRows = ProcessPlanner.GroupAllRows(plan);
     }
 
     public static async Task ScanAsync(string configPath = null)
     {
+        await ScanAsync(configPath, CancellationToken.None);
+    }
+
+    public static async Task ScanAsync(string configPath, CancellationToken token)
+    {
         configPath = configPath ?? Instance.ConfigPathInstance;
-        var plan = await ProcessPlanner.GetClosePlanAsync(configPath);
+        var plan = await ProcessPlanner.GetClosePlanAsync(configPath, token);
+        token.ThrowIfCancellationRequested();
+        ApplyPreferenceHints(plan);
         CurrentPlan = plan;
         LastScanTime = DateTime.Now;
         CandidateRows = ProcessPlanner.GroupRows(plan.Candidates ?? new List<ProcessRecord>());
         ProtectedRows = ProcessPlanner.GroupRows(plan.Protected ?? new List<ProcessRecord>());
+        AllProcessRows = ProcessPlanner.GroupAllRows(plan);
+    }
+
+    private static void ApplyPreferenceHints(ClosePlan plan)
+    {
+        if (plan == null)
+        {
+            return;
+        }
+
+        var preferences = Instance.PreferencesInstance;
+        foreach (ProcessRecord record in plan.Candidates ?? new List<ProcessRecord>())
+        {
+            record.UsageHint = ProcessPlanner.BuildUsageHint(new[] { record });
+            record.HabitHint = preferences.GetHabitHint(record.ProcessName);
+        }
     }
 
     public static void LoadPreferences()
@@ -159,6 +204,6 @@ public class AppState : INotifyPropertyChanged
     private static string GetConfigPath()
     {
         string appDir = AppDomain.CurrentDomain.BaseDirectory;
-        return System.IO.Path.Combine(appDir, "close-user-apps.config.json");
+        return AppConfigPathResolver.EnsureUserConfig(appDir);
     }
 }

@@ -160,6 +160,35 @@ namespace OneClickClose.Core
             return nameMap;
         }
 
+        internal static Dictionary<int, string> GetProcessPathMap()
+        {
+            Dictionary<int, string> map = new Dictionary<int, string>();
+            try
+            {
+                using (ManagementObjectSearcher searcher = new ManagementObjectSearcher("SELECT ProcessId, ExecutablePath FROM Win32_Process"))
+                {
+                    foreach (ManagementObject mo in searcher.Get())
+                    {
+                        using (mo)
+                        {
+                            object pidValue = mo["ProcessId"];
+                            if (pidValue == null)
+                            {
+                                continue;
+                            }
+
+                            object pathValue = mo["ExecutablePath"];
+                            string path = pathValue == null ? "" : Convert.ToString(pathValue) ?? "";
+                            map[Convert.ToInt32(pidValue)] = path;
+                        }
+                    }
+                }
+            }
+            catch
+            {
+            }
+            return map;
+        }
         internal static HashSet<int> GetVisibleWindowProcessIds()
         {
             HashSet<int> ids = new HashSet<int>();

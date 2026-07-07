@@ -9,9 +9,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>OneClickClose.Core.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="LibreHardwareMonitorLib" Version="0.9.5-pre515" />
     <PackageReference Include="System.Diagnostics.PerformanceCounter" Version="9.0.*" />
     <PackageReference Include="System.Management" Version="9.0.*" />
-    <PackageReference Include="System.ServiceProcess.ServiceController" Version="9.0.*" />
   </ItemGroup>
 
 </Project>

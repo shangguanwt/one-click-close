@@ -1,20 +1,49 @@
-﻿bin/
+# Build outputs
+bin/
 obj/
-release/*.exe
-release/*.zip
-release/close-user-apps.config.json
-release/*.TMP
-release/package/
-release/*.png
+artifacts/
+publish/
+TestResults/
+*.trx
+*.coverage
+*.coveragexml
+coverage/
+
+# Release outputs
+release/
+*.nupkg
+*.snupkg
+
+# Runtime, review, and generated media outputs
+work/
+output/
+outputs/
+test-results/
+.playwright-cli/
+
+# IDE and OS files
+.vs/
+.vscode/
+.idea/
 *.user
 *.suo
-.vs/
+*.userosscache
+*.sln.docstates
 Thumbs.db
 Desktop.ini
 
+# Local configuration and secrets
+.env
+.env.*
+*.local.json
+close-user-apps.local.json
+
 # Agent / tooling artifacts
 .agent/
+.agents/
+.codex/
 .agent_todos.json
 .metis/
+.trae/
 spark-output/
 METIS.md

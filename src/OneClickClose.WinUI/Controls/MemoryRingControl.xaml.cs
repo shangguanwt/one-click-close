@@ -1,8 +1,8 @@
 using System;
-using Microsoft.UI;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
+using OneClickClose.WinUI.Services;
 using Windows.Foundation;
 
 namespace OneClickClose.WinUI.Controls;
@@ -32,7 +32,24 @@ public sealed partial class MemoryRingControl : UserControl
     public MemoryRingControl()
     {
         InitializeComponent();
-        Loaded += (_, _) => UpdateArc();
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
+    }
+
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        AppThemeService.ThemeChanged += OnThemeChanged;
+        UpdateArc();
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        AppThemeService.ThemeChanged -= OnThemeChanged;
+    }
+
+    private void OnThemeChanged(object sender, EventArgs e)
+    {
+        UpdateArc();
     }
 
     private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -65,34 +82,50 @@ public sealed partial class MemoryRingControl : UserControl
         double cx = 90, cy = 90;
         double x1 = cx + radius * Math.Cos(startRad);
         double y1 = cy + radius * Math.Sin(startRad);
-        double x2 = cx + radius * Math.Cos(endRad);
-        double y2 = cy + radius * Math.Sin(endRad);
 
         var figure = new PathFigure
         {
             StartPoint = new Point(x1, y1),
             IsClosed = false
         };
-        figure.Segments.Add(new ArcSegment
+
+        if (percent >= 99.95)
         {
-            Point = new Point(x2, y2),
-            Size = new Size(radius, radius),
-            RotationAngle = 0,
-            IsLargeArc = sweepAngle > 180,
-            SweepDirection = SweepDirection.Clockwise
-        });
+            double midAngle = startAngle + 180;
+            double midRad = midAngle * Math.PI / 180.0;
+            double xMid = cx + radius * Math.Cos(midRad);
+            double yMid = cy + radius * Math.Sin(midRad);
+
+            figure.Segments.Add(CreateArcSegment(new Point(xMid, yMid), radius, isLargeArc: false));
+            figure.Segments.Add(CreateArcSegment(new Point(x1, y1), radius, isLargeArc: false));
+        }
+        else
+        {
+            double x2 = cx + radius * Math.Cos(endRad);
+            double y2 = cy + radius * Math.Sin(endRad);
+
+            figure.Segments.Add(CreateArcSegment(new Point(x2, y2), radius, sweepAngle > 180));
+        }
 
         var geometry = new PathGeometry();
         geometry.Figures.Add(figure);
         ValueArc.Data = geometry;
 
-        // Accent blue → Copper gradient based on value
-        // 0% = #4A90D9 (74,144,217)  100% = #E09040 (224,144,64)
-        byte r = (byte)(74 + (int)(224 - 74) * percent / 100);
-        byte g = 144;
-        byte b = (byte)(217 + (int)(64 - 217) * percent / 100);
-        ValueArc.Stroke = new SolidColorBrush(ColorHelper.FromArgb(255, r, g, b));
+        ValueArc.Stroke = Application.Current.Resources["MemoryRingGradientBrush"] as Brush
+            ?? Application.Current.Resources["AccentBrush"] as Brush;
 
         ValueText.Text = percent.ToString("F0") + "%";
+    }
+
+    private static ArcSegment CreateArcSegment(Point point, double radius, bool isLargeArc)
+    {
+        return new ArcSegment
+        {
+            Point = point,
+            Size = new Size(radius, radius),
+            RotationAngle = 0,
+            IsLargeArc = isLargeArc,
+            SweepDirection = SweepDirection.Clockwise
+        };
     }
 }

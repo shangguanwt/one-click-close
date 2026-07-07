@@ -369,7 +369,7 @@ public static class StartupScanner
 
     // ── 注册表禁用 / 启用 ────────────────────────────────────────────────
 
-    private static (RegistryKey? BaseKey, string SubKeyPath, string ValueName) ParseRegistryLocation(
+    private static (RegistryKey BaseKey, string SubKeyPath, string ValueName) ParseRegistryLocation(
         StartupItem item)
     {
         string location = item.Location;

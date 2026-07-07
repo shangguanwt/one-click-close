@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <RootNamespace>OneClickClose.Launcher</RootNamespace>
+    <AssemblyName>OneClickClose</AssemblyName>
+    <ApplicationIcon>..\OneClickClose.WinUI\Assets\AppIcon.ico</ApplicationIcon>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseAppHost>true</UseAppHost>
+  </PropertyGroup>
+
+</Project>

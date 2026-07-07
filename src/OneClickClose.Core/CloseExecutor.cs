@@ -170,25 +170,59 @@ namespace OneClickClose.Core
                     continue;
                 }
 
-                if (!forceAllowed.Contains(item.ProcessName))
+                bool explicitForce = forceAllowed.Contains(item.ProcessName);
+                bool safeAutoForce = ctx.Plan.Config.ForceAfterGracefulFailure
+                    && item.IsAutoDetected
+                    && item.Action == ProcessPlanner.ActionGraceful
+                    && !item.IsHighRisk
+                    && item.RiskScore < RiskCalculator.HighRiskScoreThreshold
+                    && item.IsUserPath
+                    && !item.IsSystemPath
+                    && !string.IsNullOrWhiteSpace(item.Path);
+
+                if (!explicitForce && !safeAutoForce)
                 {
                     AddUnique(ctx, item);
-                    ctx.Log(LogLine("[SKIP]", item.ProcessName + " (" + item.Id + ") 不在强制清理名单，保留运行。"));
+                    string reason = item.IsAutoDetected
+                        ? "未满足安全强制条件，保留运行。"
+                        : "不在强制清理名单，保留运行。";
+                    ctx.Log(LogLine("[SKIP]", item.ProcessName + " (" + item.Id + ") " + reason));
                     continue;
                 }
 
                 try
                 {
                     Process process = Process.GetProcessById(item.Id);
-                    process.Kill();
+                    KillProcess(process, out string mode);
                     ctx.Result.Forced.Add(item);
                     ctx.ForcedIds.Add(item.Id);
-                    ctx.Log(LogLine("[FORCE]", "阶段 3 已强制关闭：" + item.ProcessName + " (" + item.Id + ")。"));
+                    ctx.Log(LogLine("[FORCE]", "阶段 3 已强制关闭" + mode + "：" + item.ProcessName + " (" + item.Id + ")。"));
                 }
                 catch (Exception ex)
                 {
                     AddUnique(ctx, item);
                     ctx.Log(LogLine("[ERROR]", item.ProcessName + " (" + item.Id + ") 强制关闭失败：" + ex.Message));
+                }
+            }
+        }
+
+        private static void KillProcess(Process process, out string mode)
+        {
+            try
+            {
+                process.Kill(true);
+                mode = "进程树";
+            }
+            catch (Exception treeEx)
+            {
+                try
+                {
+                    process.Kill();
+                    mode = "单进程（进程树失败：" + treeEx.Message + "）";
+                }
+                catch (Exception singleEx)
+                {
+                    throw new InvalidOperationException("进程树失败：" + treeEx.Message + "；单进程失败：" + singleEx.Message, singleEx);
                 }
             }
         }

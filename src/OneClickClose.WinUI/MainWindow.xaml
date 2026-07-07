@@ -13,9 +13,8 @@
     </Window.SystemBackdrop>
 
     <Border Background="{StaticResource WindowGradientBrush}"
-            BorderBrush="{StaticResource StrokeBrush}"
-            BorderThickness="1"
-            CornerRadius="{StaticResource WindowRadius}">
+            BorderThickness="0"
+            CornerRadius="0">
         <Grid x:Name="RootGrid">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="248"/>
@@ -26,7 +25,7 @@
 
             <!-- Sidebar matching the reference utility shell. -->
             <Border Grid.Column="0"
-                    Background="#AA050B14"
+                    Background="{StaticResource PaneBrush}"
                     BorderBrush="{StaticResource DividerBrush}"
                     BorderThickness="0,0,1,0"
                     Padding="20,28,16,22">
@@ -51,56 +50,45 @@
 
                     <StackPanel Grid.Row="2" Spacing="8">
                         <Button x:Name="OverviewNavButton" Tag="overview" Style="{StaticResource SidebarNavButtonStyle}" Click="SidebarNav_Click">
-                            <Grid>
-                                <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                            <Grid MinHeight="46">
+                                <Border x:Name="OverviewNavBackground" CornerRadius="14" Opacity="0"/>
+                                <StackPanel x:Name="OverviewNavContent" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center" Margin="14,0">
                                     <FontIcon Glyph="&#xE80F;" FontSize="17" Foreground="White"/>
                                     <TextBlock Text="总览" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="White" TextTrimming="CharacterEllipsis"/>
                                 </StackPanel>
                             </Grid>
                         </Button>
-                        <Button x:Name="QuickCloseNavButton" Tag="overview" Style="{StaticResource SidebarNavButtonStyle}" Click="SidebarNav_Click">
-                            <Grid>
-                                <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
-                                    <FontIcon Glyph="&#xE945;" FontSize="17" Foreground="White"/>
-                                    <TextBlock Text="一键关闭" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="White" TextTrimming="CharacterEllipsis"/>
-                                </StackPanel>
-                            </Grid>
-                        </Button>
                         <Button x:Name="CandidatesNavButton" Tag="candidates" Style="{StaticResource SidebarNavButtonStyle}" Click="SidebarNav_Click">
-                            <Grid>
-                                <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                            <Grid MinHeight="46">
+                                <Border x:Name="CandidatesNavBackground" CornerRadius="14" Opacity="0"/>
+                                <StackPanel x:Name="CandidatesNavContent" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center" Margin="14,0">
                                     <FontIcon Glyph="&#xE9D5;" FontSize="17" Foreground="White"/>
                                     <TextBlock Text="后台进程" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="White" TextTrimming="CharacterEllipsis"/>
                                 </StackPanel>
                             </Grid>
                         </Button>
                         <Button x:Name="ProtectedNavButton" Tag="protected" Style="{StaticResource SidebarNavButtonStyle}" Click="SidebarNav_Click">
-                            <Grid>
-                                <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                            <Grid MinHeight="46">
+                                <Border x:Name="ProtectedNavBackground" CornerRadius="14" Opacity="0"/>
+                                <StackPanel x:Name="ProtectedNavContent" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center" Margin="14,0">
                                     <FontIcon Glyph="&#xE72E;" FontSize="17" Foreground="White"/>
                                     <TextBlock Text="白名单" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="White" TextTrimming="CharacterEllipsis"/>
                                 </StackPanel>
                             </Grid>
                         </Button>
-                        <Button x:Name="PerformanceNavButton" Tag="performance" Style="{StaticResource SidebarNavButtonStyle}" Click="SidebarNav_Click">
-                            <Grid>
-                                <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
-                                    <FontIcon Glyph="&#xE9D2;" FontSize="17" Foreground="White"/>
-                                    <TextBlock Text="性能监控" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="White" TextTrimming="CharacterEllipsis"/>
-                                </StackPanel>
-                            </Grid>
-                        </Button>
                         <Button x:Name="LogsNavButton" Tag="logs" Style="{StaticResource SidebarNavButtonStyle}" Click="SidebarNav_Click">
-                            <Grid>
-                                <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                            <Grid MinHeight="46">
+                                <Border x:Name="LogsNavBackground" CornerRadius="14" Opacity="0"/>
+                                <StackPanel x:Name="LogsNavContent" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center" Margin="14,0">
                                     <FontIcon Glyph="&#xE8FD;" FontSize="17" Foreground="White"/>
                                     <TextBlock Text="清理记录" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="White" TextTrimming="CharacterEllipsis"/>
                                 </StackPanel>
                             </Grid>
                         </Button>
                         <Button x:Name="SettingsNavButton" Tag="settings" Style="{StaticResource SidebarNavButtonStyle}" Click="SidebarNav_Click">
-                            <Grid>
-                                <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                            <Grid MinHeight="46">
+                                <Border x:Name="SettingsNavBackground" CornerRadius="14" Opacity="0"/>
+                                <StackPanel x:Name="SettingsNavContent" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center" Margin="14,0">
                                     <FontIcon Glyph="&#xE713;" FontSize="17" Foreground="White"/>
                                     <TextBlock Text="设置" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center" Foreground="White" TextTrimming="CharacterEllipsis"/>
                                 </StackPanel>
@@ -108,7 +96,7 @@
                         </Button>
                     </StackPanel>
 
-                    <Border Grid.Row="3" Background="#660B1726" BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1" CornerRadius="18" Padding="14">
+                    <Border Grid.Row="3" Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1" CornerRadius="18" Padding="14">
                         <StackPanel Spacing="10">
                             <StackPanel Orientation="Horizontal" Spacing="10">
                                 <Grid Width="34" Height="34">
@@ -140,22 +128,25 @@
                         <TextBlock x:Name="PageTitleText" Text="总览" FontSize="28" FontWeight="SemiBold" Foreground="{StaticResource TitleTextBrush}" TextTrimming="CharacterEllipsis"/>
                         <TextBlock x:Name="PageSubtitleText" Text="快速优化，让电脑保持最佳状态" FontSize="13" Foreground="{StaticResource SubtleTextBrush}" TextWrapping="Wrap" MaxLines="2"/>
                     </StackPanel>
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="10" VerticalAlignment="Center" Margin="0,4,96,0">
-                        <Button Style="{StaticResource SubtleButtonStyle}" Padding="12" MinWidth="42" Height="42">
-                            <FontIcon Glyph="&#xE721;" FontSize="15"/>
-                        </Button>
-                        <Button Style="{StaticResource SubtleButtonStyle}" Padding="12" MinWidth="42" Height="42">
-                            <FontIcon Glyph="&#xE7ED;" FontSize="15"/>
-                        </Button>
-                        <Grid Width="42" Height="42">
-                            <Ellipse Fill="{StaticResource PrimaryGradientBrush}"/>
-                            <TextBlock Text="OC" FontSize="12" FontWeight="SemiBold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                        </Grid>
-                    </StackPanel>
                 </Grid>
 
                 <Frame x:Name="ContentFrame" Grid.Row="1" Padding="0"/>
             </Grid>
+
+            <Button x:Name="ThemeToggleButton"
+                    Grid.ColumnSpan="2"
+                    Style="{StaticResource IconButtonStyle}"
+                    Click="ThemeToggleButton_Click"
+                    ToolTipService.ToolTip="切换亮色/暗色主题"
+                    AutomationProperties.Name="切换主题"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Canvas.ZIndex="30">
+                <FontIcon x:Name="ThemeToggleIcon"
+                          Glyph="&#xE706;"
+                          FontSize="17"
+                          Foreground="{StaticResource TitleTextBrush}"/>
+            </Button>
         </Grid>
     </Border>
 </Window>

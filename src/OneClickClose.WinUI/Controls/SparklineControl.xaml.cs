@@ -5,6 +5,7 @@ using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Controls;
 using Microsoft.UI.Xaml.Media;
 using Microsoft.UI.Xaml.Shapes;
+using OneClickClose.WinUI.Services;
 using Windows.Foundation;
 
 namespace OneClickClose.WinUI.Controls;
@@ -41,7 +42,24 @@ public sealed partial class SparklineControl : UserControl
     {
         this.InitializeComponent();
         this.SizeChanged += (_, _) => Redraw();
-        LineColor = new SolidColorBrush(ColorHelper.FromArgb(255, 30, 144, 255));
+        Loaded += OnLoaded;
+        Unloaded += OnUnloaded;
+    }
+
+    private void OnLoaded(object sender, RoutedEventArgs e)
+    {
+        AppThemeService.ThemeChanged += OnThemeChanged;
+        Redraw();
+    }
+
+    private void OnUnloaded(object sender, RoutedEventArgs e)
+    {
+        AppThemeService.ThemeChanged -= OnThemeChanged;
+    }
+
+    private void OnThemeChanged(object sender, EventArgs e)
+    {
+        Redraw();
     }
 
     private static void OnValuesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -72,9 +90,11 @@ public sealed partial class SparklineControl : UserControl
             points[i] = new Point(x, Math.Clamp(y, 0, h));
         }
 
+        Brush strokeBrush = ResolveLineBrush();
+
         // Resolve line color (fallback to DodgerBlue when null or non-solid)
         Windows.UI.Color lineColor;
-        if (LineColor is SolidColorBrush scb)
+        if (strokeBrush is SolidColorBrush scb)
             lineColor = scb.Color;
         else
             lineColor = ColorHelper.FromArgb(255, 30, 144, 255);
@@ -100,7 +120,7 @@ public sealed partial class SparklineControl : UserControl
         // -- Polyline stroke on top ------------------------------------
         var line = new Polyline
         {
-            Stroke = LineColor ?? new SolidColorBrush(ColorHelper.FromArgb(255, 30, 144, 255)),
+            Stroke = strokeBrush,
             StrokeThickness = 1.5,
             StrokeLineJoin = PenLineJoin.Round,
             StrokeStartLineCap = PenLineCap.Round,
@@ -108,5 +128,12 @@ public sealed partial class SparklineControl : UserControl
         };
         foreach (var p in points) line.Points.Add(p);
         PlotCanvas.Children.Add(line);
+    }
+
+    private Brush ResolveLineBrush()
+    {
+        return LineColor
+            ?? Application.Current.Resources["AccentLightBrush"] as Brush
+            ?? new SolidColorBrush(ColorHelper.FromArgb(255, 30, 144, 255));
     }
 }

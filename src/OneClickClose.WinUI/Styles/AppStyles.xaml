@@ -2,54 +2,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
-    <!-- ═══ ContentDialog Override: Rounded 16px, dark card bg ═══ -->
-    <!-- 颜色与 Theme.xaml 同步 — 改色时两处一起改 -->
     <CornerRadius x:Key="ContentDialogCornerRadius">16</CornerRadius>
-    <SolidColorBrush x:Key="ContentDialogBackground"           Color="#1A1E22"/>
-    <SolidColorBrush x:Key="ContentDialogBorderBrush"          Color="#262B30"/>
-    <SolidColorBrush x:Key="ContentDialogTitleForeground"     Color="#F0F1F3"/>
-    <SolidColorBrush x:Key="ContentDialogForeground"           Color="#A8ACB4"/>
-    <SolidColorBrush x:Key="ContentDialogSeparatorBrush"      Color="#262B30"/>
-    <SolidColorBrush x:Key="ContentDialogButtonBackground"    Color="#4A90D9"/>
-    <SolidColorBrush x:Key="ContentDialogButtonForeground"    Color="#FFFFFF"/>
-    <SolidColorBrush x:Key="ContentDialogButtonBorderBrush"   Color="Transparent"/>
-    <SolidColorBrush x:Key="ContentDialogCloseButtonBackground"  Color="#1E2329"/>
-    <SolidColorBrush x:Key="ContentDialogCloseButtonForeground" Color="#A8ACB4"/>
-
-    <!-- ═══ InfoBar Override: Rounded 10px ═══ -->
     <CornerRadius x:Key="InfoBarCornerRadius">10</CornerRadius>
-
-    <!-- ═══ ToggleSwitch Override ═══ -->
-    <!-- 与 Theme.xaml PrimaryBrush / SubtleTextBrush / StrokeBrush 同步 -->
-    <SolidColorBrush x:Key="ToggleSwitchOnForeground"          Color="#4A90D9"/>
-    <SolidColorBrush x:Key="ToggleSwitchForeground"            Color="#6B7079"/>
-    <SolidColorBrush x:Key="ToggleSwitchTrackOnForeground"     Color="#4A90D9"/>
-    <SolidColorBrush x:Key="ToggleSwitchTrackForeground"       Color="#262B30"/>
-    <SolidColorBrush x:Key="ToggleSwitchThumbForeground"       Color="#F0F1F3"/>
-    <SolidColorBrush x:Key="ToggleSwitchThumbOnForeground"     Color="#F0F1F3"/>
-
-    <!-- ═══ NavigationView Item Overrides ═══ -->
-    <!-- 与 Theme.xaml CardBrush / TitleTextBrush / PrimaryBrush 同步 -->
-    <SolidColorBrush x:Key="NavigationViewItemBackground"           Color="Transparent"/>
-    <SolidColorBrush x:Key="NavigationViewItemBackgroundPointerOver" Color="#1E2329"/>
-    <SolidColorBrush x:Key="NavigationViewItemBackgroundPressed"    Color="#171A1E"/>
-    <SolidColorBrush x:Key="NavigationViewItemBackgroundSelected"   Color="#1A1E22"/>
-    <SolidColorBrush x:Key="NavigationViewItemForeground"           Color="#A8ACB4"/>
-    <SolidColorBrush x:Key="NavigationViewItemForegroundPointerOver" Color="#F0F1F3"/>
-    <SolidColorBrush x:Key="NavigationViewItemForegroundSelected"   Color="#F0F1F3"/>
-    <SolidColorBrush x:Key="NavigationViewSelectionIndicatorForeground" Color="#4A90D9"/>
-    <SolidColorBrush x:Key="NavigationViewContentBackground"        Color="#14171A"/>
-    <SolidColorBrush x:Key="NavigationViewContentGridBorderBrush"   Color="Transparent"/>
-
-    <!-- ═══ ScrollBar Override: Minimal ═══ -->
-    <!-- 与 Theme.xaml SubtleTextBrush / HoverBrush / StrokeBrush / PrimaryBrush 同步 -->
-    <SolidColorBrush x:Key="ScrollBarButtonBackground"           Color="Transparent"/>
-    <SolidColorBrush x:Key="ScrollBarButtonBorderBrush"          Color="Transparent"/>
-    <SolidColorBrush x:Key="ScrollBarButtonForeground"           Color="#6B7079"/>
-    <SolidColorBrush x:Key="ScrollBarButtonHoverBackground"      Color="#1E2329"/>
-    <SolidColorBrush x:Key="ScrollBarThumbBackground"            Color="#262B30"/>
-    <SolidColorBrush x:Key="ScrollBarThumbHoverBackground"       Color="#4A90D9"/>
-    <SolidColorBrush x:Key="ScrollBarThumbPressedBackground"     Color="#6BAEEC"/>
-    <SolidColorBrush x:Key="ScrollBarTrackBackground"            Color="Transparent"/>
 
 </ResourceDictionary>

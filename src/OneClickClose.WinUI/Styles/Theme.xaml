@@ -15,7 +15,7 @@
     <CornerRadius x:Key="SmallRadius">8</CornerRadius>
     <CornerRadius x:Key="CardRadius">18</CornerRadius>
     <CornerRadius x:Key="BadgeRadius">14</CornerRadius>
-    <CornerRadius x:Key="WindowRadius">22</CornerRadius>
+    <CornerRadius x:Key="WindowRadius">18</CornerRadius>
 
     <SolidColorBrush x:Key="BaseBrush" Color="#030812"/>
     <SolidColorBrush x:Key="ContentBrush" Color="#07101B"/>
@@ -28,6 +28,17 @@
     <SolidColorBrush x:Key="StrokeHoverBrush" Color="#2F5075"/>
     <SolidColorBrush x:Key="DividerBrush" Color="#102235"/>
     <SolidColorBrush x:Key="DividerSolidBrush" Color="#1D314A"/>
+    <SolidColorBrush x:Key="DisabledSurfaceBrush" Color="#1B2A3D"/>
+    <SolidColorBrush x:Key="DisabledStrokeBrush" Color="#26384E"/>
+    <SolidColorBrush x:Key="DisabledTextBrush" Color="#70849D"/>
+    <SolidColorBrush x:Key="ButtonPressedBrush" Color="#0D1D30"/>
+    <SolidColorBrush x:Key="SidebarNavBackgroundBrush" Color="Transparent"/>
+    <SolidColorBrush x:Key="SidebarNavHoverBrush" Color="#132A44"/>
+    <SolidColorBrush x:Key="SidebarNavPressedBrush" Color="#0D1D30"/>
+    <SolidColorBrush x:Key="SidebarNavForegroundBrush" Color="#C8D3E0"/>
+    <SolidColorBrush x:Key="SidebarNavHoverForegroundBrush" Color="#F5F8FF"/>
+    <SolidColorBrush x:Key="SidebarNavPressedForegroundBrush" Color="#F5F8FF"/>
+    <SolidColorBrush x:Key="SidebarNavSelectedForegroundBrush" Color="#FFFFFF"/>
 
     <SolidColorBrush x:Key="TitleTextBrush" Color="#F5F8FF"/>
     <SolidColorBrush x:Key="BodyTextBrush" Color="#C8D3E0"/>
@@ -46,6 +57,7 @@
     <SolidColorBrush x:Key="PurpleBrush" Color="#8B5CF6"/>
     <SolidColorBrush x:Key="PurpleSoftBrush" Color="#228B5CF6"/>
     <SolidColorBrush x:Key="CyanSoftBrush" Color="#1A55C7FF"/>
+    <SolidColorBrush x:Key="OnAccentSoftBrush" Color="#40FFFFFF"/>
 
     <LinearGradientBrush x:Key="WindowGradientBrush" StartPoint="0,0" EndPoint="1,1">
         <GradientStop Color="#030812" Offset="0"/>
@@ -108,6 +120,76 @@
     <SolidColorBrush x:Key="ComboBoxBackgroundPointerOver" Color="#102238"/>
     <SolidColorBrush x:Key="ComboBoxBorderBrush" Color="#1D314A"/>
     <SolidColorBrush x:Key="ComboBoxForeground" Color="#C8D3E0"/>
+
+    <SolidColorBrush x:Key="ButtonForeground" Color="#C8D3E0"/>
+    <SolidColorBrush x:Key="ButtonForegroundPointerOver" Color="#F5F8FF"/>
+    <SolidColorBrush x:Key="ButtonForegroundPressed" Color="#F5F8FF"/>
+    <SolidColorBrush x:Key="ButtonForegroundDisabled" Color="#70849D"/>
+    <SolidColorBrush x:Key="ButtonBackground" Color="#0B1726"/>
+    <SolidColorBrush x:Key="ButtonBackgroundPointerOver" Color="#132A44"/>
+    <SolidColorBrush x:Key="ButtonBackgroundPressed" Color="#0D1D30"/>
+    <SolidColorBrush x:Key="ButtonBackgroundDisabled" Color="#1B2A3D"/>
+    <SolidColorBrush x:Key="ButtonBorderBrush" Color="#1D314A"/>
+    <SolidColorBrush x:Key="ButtonBorderBrushPointerOver" Color="#2F5075"/>
+    <SolidColorBrush x:Key="ButtonBorderBrushPressed" Color="#2F5075"/>
+    <SolidColorBrush x:Key="ButtonBorderBrushDisabled" Color="#26384E"/>
+    <SolidColorBrush x:Key="AccentButtonForeground" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="AccentButtonForegroundPointerOver" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="AccentButtonForegroundPressed" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="AccentButtonForegroundDisabled" Color="#9EB1C8"/>
+    <SolidColorBrush x:Key="AccentButtonBackgroundDisabled" Color="#52657B"/>
+    <SolidColorBrush x:Key="AccentButtonBorderBrushDisabled" Color="#52657B"/>
+    <SolidColorBrush x:Key="ExpanderHeaderBackground" Color="#0B1726"/>
+    <SolidColorBrush x:Key="ExpanderHeaderBackgroundPointerOver" Color="#132A44"/>
+    <SolidColorBrush x:Key="ExpanderHeaderBackgroundPressed" Color="#102238"/>
+    <SolidColorBrush x:Key="ExpanderHeaderForeground" Color="#F5F8FF"/>
+    <SolidColorBrush x:Key="ExpanderHeaderBorderBrush" Color="#1D314A"/>
+    <SolidColorBrush x:Key="ExpanderContentBackground" Color="#0B1726"/>
+    <SolidColorBrush x:Key="ExpanderContentForeground" Color="#C8D3E0"/>
+
+    <SolidColorBrush x:Key="ContentDialogBackground" Color="#1A1E22"/>
+    <SolidColorBrush x:Key="ContentDialogBorderBrush" Color="#262B30"/>
+    <SolidColorBrush x:Key="ContentDialogTitleForeground" Color="#F0F1F3"/>
+    <SolidColorBrush x:Key="ContentDialogForeground" Color="#A8ACB4"/>
+    <SolidColorBrush x:Key="ContentDialogSeparatorBrush" Color="#262B30"/>
+    <SolidColorBrush x:Key="ContentDialogButtonBackground" Color="#4A90D9"/>
+    <SolidColorBrush x:Key="ContentDialogButtonForeground" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ContentDialogButtonBorderBrush" Color="Transparent"/>
+    <SolidColorBrush x:Key="ContentDialogCloseButtonBackground" Color="#1E2329"/>
+    <SolidColorBrush x:Key="ContentDialogCloseButtonForeground" Color="#A8ACB4"/>
+    <SolidColorBrush x:Key="ToggleSwitchOnForeground" Color="#4A90D9"/>
+    <SolidColorBrush x:Key="ToggleSwitchForeground" Color="#6B7079"/>
+    <SolidColorBrush x:Key="ToggleSwitchTrackOnForeground" Color="#4A90D9"/>
+    <SolidColorBrush x:Key="ToggleSwitchTrackForeground" Color="#262B30"/>
+    <SolidColorBrush x:Key="ToggleSwitchThumbForeground" Color="#F0F1F3"/>
+    <SolidColorBrush x:Key="ToggleSwitchThumbOnForeground" Color="#F0F1F3"/>
+    <SolidColorBrush x:Key="ToggleSwitchFillOn" Color="#4A90D9"/>
+    <SolidColorBrush x:Key="ToggleSwitchFillOnPointerOver" Color="#6BAEEC"/>
+    <SolidColorBrush x:Key="ToggleSwitchFillOnPressed" Color="#2F7BFF"/>
+    <SolidColorBrush x:Key="ToggleSwitchStrokeOn" Color="#4A90D9"/>
+    <SolidColorBrush x:Key="ToggleSwitchStrokeOnPointerOver" Color="#6BAEEC"/>
+    <SolidColorBrush x:Key="ToggleSwitchStrokeOnPressed" Color="#2F7BFF"/>
+    <SolidColorBrush x:Key="ToggleSwitchKnobFillOn" Color="#F0F1F3"/>
+    <SolidColorBrush x:Key="ToggleSwitchKnobFillOnPointerOver" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="ToggleSwitchKnobFillOnPressed" Color="#FFFFFF"/>
+    <SolidColorBrush x:Key="NavigationViewItemBackground" Color="Transparent"/>
+    <SolidColorBrush x:Key="NavigationViewItemBackgroundPointerOver" Color="#1E2329"/>
+    <SolidColorBrush x:Key="NavigationViewItemBackgroundPressed" Color="#171A1E"/>
+    <SolidColorBrush x:Key="NavigationViewItemBackgroundSelected" Color="#1A1E22"/>
+    <SolidColorBrush x:Key="NavigationViewItemForeground" Color="#A8ACB4"/>
+    <SolidColorBrush x:Key="NavigationViewItemForegroundPointerOver" Color="#F0F1F3"/>
+    <SolidColorBrush x:Key="NavigationViewItemForegroundSelected" Color="#F0F1F3"/>
+    <SolidColorBrush x:Key="NavigationViewSelectionIndicatorForeground" Color="#4A90D9"/>
+    <SolidColorBrush x:Key="NavigationViewContentBackground" Color="#14171A"/>
+    <SolidColorBrush x:Key="NavigationViewContentGridBorderBrush" Color="Transparent"/>
+    <SolidColorBrush x:Key="ScrollBarButtonBackground" Color="Transparent"/>
+    <SolidColorBrush x:Key="ScrollBarButtonBorderBrush" Color="Transparent"/>
+    <SolidColorBrush x:Key="ScrollBarButtonForeground" Color="#6B7079"/>
+    <SolidColorBrush x:Key="ScrollBarButtonHoverBackground" Color="#1E2329"/>
+    <SolidColorBrush x:Key="ScrollBarThumbBackground" Color="#262B30"/>
+    <SolidColorBrush x:Key="ScrollBarThumbHoverBackground" Color="#4A90D9"/>
+    <SolidColorBrush x:Key="ScrollBarThumbPressedBackground" Color="#6BAEEC"/>
+    <SolidColorBrush x:Key="ScrollBarTrackBackground" Color="Transparent"/>
 
     <Style x:Key="HeroTitleStyle" TargetType="TextBlock">
         <Setter Property="FontSize" Value="38"/>
@@ -184,6 +266,41 @@
         <Setter Property="HorizontalAlignment" Value="Left"/>
     </Style>
     <Style x:Key="TagBadgeStyle" TargetType="Border" BasedOn="{StaticResource StatusTagStyle}"/>
+    <Style x:Key="HeroBadgeStyle" TargetType="Border" BasedOn="{StaticResource StatusTagStyle}">
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="10,5"/>
+        <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource StrokeBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+    </Style>
+    <Style x:Key="HeroGroupBadgeStyle" TargetType="Border" BasedOn="{StaticResource HeroBadgeStyle}">
+        <Setter Property="Background" Value="{StaticResource CyanSoftBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource AccentLightBrush}"/>
+    </Style>
+    <Style x:Key="HeroProcessBadgeStyle" TargetType="Border" BasedOn="{StaticResource HeroBadgeStyle}">
+        <Setter Property="Background" Value="{StaticResource SafeSoftBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource SafeBrush}"/>
+    </Style>
+    <Style x:Key="HeroStartupBadgeStyle" TargetType="Border" BasedOn="{StaticResource HeroBadgeStyle}">
+        <Setter Property="Background" Value="{StaticResource CopperSoftBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource CopperBrush}"/>
+    </Style>
+    <Style x:Key="PreviewCountBadgeStyle" TargetType="Border">
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Padding" Value="8,3"/>
+        <Setter Property="Background" Value="{StaticResource MutedSoftBrush}"/>
+        <Setter Property="VerticalAlignment" Value="Center"/>
+        <Setter Property="HorizontalAlignment" Value="Left"/>
+    </Style>
+    <Style x:Key="PreviewRowStyle" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="BorderBrush" Value="{StaticResource StrokeBrush}"/>
+        <Setter Property="BorderThickness" Value="1"/>
+        <Setter Property="Padding" Value="12"/>
+        <Setter Property="MinHeight" Value="76"/>
+        <Setter Property="Margin" Value="0,0,0,8"/>
+    </Style>
     <Style x:Key="HeaderBarStyle" TargetType="Border">
         <Setter Property="Background" Value="{StaticResource CardBrush}"/>
         <Setter Property="CornerRadius" Value="{StaticResource ControlRadius}"/>
@@ -211,7 +328,7 @@
         <Setter Property="MinHeight" Value="46"/>
         <Setter Property="HorizontalAlignment" Value="Stretch"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-        <Setter Property="Padding" Value="14,0"/>
+        <Setter Property="Padding" Value="0"/>
         <Setter Property="CornerRadius" Value="14"/>
         <Setter Property="Background" Value="Transparent"/>
         <Setter Property="BorderThickness" Value="0"/>
@@ -240,6 +357,16 @@
         <Setter Property="BorderThickness" Value="1"/>
         <Setter Property="BorderBrush" Value="{StaticResource StrokeBrush}"/>
         <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
+    </Style>
+    <Style x:Key="IconButtonStyle" TargetType="Button" BasedOn="{StaticResource SubtleButtonStyle}">
+        <Setter Property="Width" Value="42"/>
+        <Setter Property="Height" Value="42"/>
+        <Setter Property="MinWidth" Value="42"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="CornerRadius" Value="12"/>
+        <Setter Property="Foreground" Value="{StaticResource TitleTextBrush}"/>
+        <Setter Property="Background" Value="{StaticResource SurfaceElevatedBrush}"/>
+        <Setter Property="BorderBrush" Value="{StaticResource StrokeHoverBrush}"/>
     </Style>
     <Style x:Key="TableActionButtonStyle" TargetType="Button" BasedOn="{StaticResource SubtleButtonStyle}">
         <Setter Property="MinWidth" Value="66"/>

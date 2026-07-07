@@ -117,12 +117,23 @@
                         <Grid x:Name="HeroCopyPanel" Grid.Column="0" VerticalAlignment="Stretch" MinWidth="0">
                             <StackPanel Spacing="18" VerticalAlignment="Center">
                                 <StackPanel Spacing="6">
-                                    <TextBlock Text="释放后台进程" Style="{StaticResource HeroTitleStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
-                                    <TextBlock Text="让电脑恢复最佳状态" Style="{StaticResource HeroTitleStyle}" Foreground="{StaticResource MutedTextBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock x:Name="HeroTitleText" Text="系统状态良好" Style="{StaticResource HeroTitleStyle}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock x:Name="HeroSubtitleText" Text="后台负载保持在安全范围" Style="{StaticResource HeroTitleStyle}" Foreground="{StaticResource MutedTextBrush}" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis"/>
                                 </StackPanel>
                                 <StackPanel Spacing="8" MinWidth="0">
                                     <TextBlock x:Name="StatusHeadline" Text="正在准备扫描" FontSize="15" FontWeight="SemiBold" Foreground="{StaticResource BodyTextBrush}" TextTrimming="CharacterEllipsis"/>
                                     <TextBlock x:Name="HeroInsightText" Text="已检测到 0 个可优化项目 / 预计释放 0 MB 内存" FontSize="13" Foreground="{StaticResource SubtleTextBrush}" TextWrapping="Wrap" MaxLines="2"/>
+                                    <StackPanel x:Name="HeroBadgePanel" Orientation="Horizontal" Spacing="8">
+                                        <Border Style="{StaticResource HeroGroupBadgeStyle}">
+                                            <TextBlock x:Name="HeroGroupBadgeText" Text="应用组 0" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource AccentLightBrush}" TextTrimming="CharacterEllipsis"/>
+                                        </Border>
+                                        <Border Style="{StaticResource HeroProcessBadgeStyle}">
+                                            <TextBlock x:Name="HeroProcessBadgeText" Text="可优化 0" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource SafeBrush}" TextTrimming="CharacterEllipsis"/>
+                                        </Border>
+                                        <Border Style="{StaticResource HeroStartupBadgeStyle}">
+                                            <TextBlock x:Name="HeroStartupBadgeText" Text="启动项 --" FontSize="12" FontWeight="SemiBold" Foreground="{StaticResource CopperBrush}" TextTrimming="CharacterEllipsis"/>
+                                        </Border>
+                                    </StackPanel>
                                     <StackPanel Orientation="Horizontal" Spacing="8">
                                         <Ellipse x:Name="StatusDot" Width="8" Height="8" Fill="{StaticResource SubtleTextBrush}" VerticalAlignment="Center"/>
                                         <TextBlock x:Name="ScanTimeText" Text="等待扫描" FontSize="12" Foreground="{StaticResource SubtleTextBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
@@ -132,16 +143,16 @@
                                     <Button x:Name="OptimizeButton" Style="{StaticResource PrimaryButtonStyle}" Click="CloseAllButton_Click" IsEnabled="False" MinHeight="52" MinWidth="150">
                                         <StackPanel Orientation="Horizontal" Spacing="10">
                                             <Grid Width="24" Height="24">
-                                                <Ellipse Fill="#33FFFFFF"/>
+                                                <Ellipse Fill="{StaticResource OnAccentSoftBrush}"/>
                                                 <FontIcon Glyph="&#xE945;" FontSize="14" Foreground="White"/>
                                             </Grid>
-                                            <TextBlock Text="立即优化" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Text="立即优化" VerticalAlignment="Center" Foreground="White" TextTrimming="CharacterEllipsis"/>
                                         </StackPanel>
                                     </Button>
                                     <Button x:Name="ScanButton" Style="{StaticResource SubtleButtonStyle}" Click="ScanButton_Click" MinHeight="52" MinWidth="132">
                                         <StackPanel Orientation="Horizontal" Spacing="8">
-                                            <FontIcon Glyph="&#xE72C;" FontSize="15"/>
-                                            <TextBlock Text="重新扫描" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                            <FontIcon Glyph="&#xE72C;" FontSize="15" Foreground="{StaticResource BodyTextBrush}"/>
+                                            <TextBlock Text="重新扫描" VerticalAlignment="Center" Foreground="{StaticResource BodyTextBrush}" TextTrimming="CharacterEllipsis"/>
                                         </StackPanel>
                                     </Button>
                                     <Button x:Name="CancelCloseButton" Content="取消" Style="{StaticResource SubtleButtonStyle}" Click="CancelCloseButton_Click" Visibility="Collapsed" MinHeight="52" MinWidth="88"/>
@@ -150,12 +161,12 @@
                         </Grid>
 
                         <Grid x:Name="MemoryHalo" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="246" Height="246">
-                            <Ellipse Fill="#16000000"/>
-                            <Ellipse Width="224" Height="224" Stroke="#172A42" StrokeThickness="1"/>
+                            <Ellipse Fill="{StaticResource SurfaceElevatedBrush}"/>
+                            <Ellipse Width="224" Height="224" Stroke="{StaticResource StrokeBrush}" StrokeThickness="1"/>
                             <controls:MemoryRingControl x:Name="MemoryRing" Value="0" UsedText="0 / 0 GB"/>
                         </Grid>
 
-                        <Border x:Name="PerformancePanel" Grid.Column="2" Background="#660B1726" BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1" CornerRadius="18" Padding="18" MinWidth="0">
+                        <Border x:Name="PerformancePanel" Grid.Column="2" Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1" CornerRadius="18" Padding="18" MinWidth="0">
                             <StackPanel Spacing="18" VerticalAlignment="Center">
                                 <TextBlock Text="性能监控" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource TitleTextBrush}" TextTrimming="CharacterEllipsis"/>
                                 <Grid ColumnSpacing="14">
@@ -278,6 +289,224 @@
                         </StackPanel>
                     </Border>
                 </Grid>
+
+                <Grid x:Name="PreviewGrid" ColumnSpacing="14" RowSpacing="14">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border x:Name="BackgroundPreviewCard" Style="{StaticResource CardBorderStyle}" Padding="18">
+                        <StackPanel Spacing="14">
+                            <Grid ColumnSpacing="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Spacing="3" MinWidth="0">
+                                    <TextBlock Text="后台应用" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource TitleTextBrush}" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="建议温和关闭，按内存占用排序" FontSize="12" Foreground="{StaticResource SubtleTextBrush}" TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+                                <Border Grid.Column="1" Style="{StaticResource PreviewCountBadgeStyle}">
+                                    <TextBlock x:Name="BackgroundPreviewCountText" Text="暂无" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource MutedTextBrush}"/>
+                                </Border>
+                                <Button Grid.Column="2" Style="{StaticResource SubtleButtonStyle}" Click="ViewAllCandidates_Click" MinHeight="38" Padding="12,7" AutomationProperties.Name="查看全部后台进程">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <TextBlock Text="查看全部" Foreground="{StaticResource BodyTextBrush}" FontSize="12"/>
+                                        <FontIcon Glyph="&#xE72A;" FontSize="12" Foreground="{StaticResource BodyTextBrush}"/>
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+
+                            <ItemsControl x:Name="BackgroundPreviewList">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource PreviewRowStyle}">
+                                            <Grid ColumnSpacing="12">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid Width="36" Height="36" VerticalAlignment="Center">
+                                                    <Grid Visibility="{Binding FallbackIconVisibility}">
+                                                        <Ellipse Fill="{Binding IconBg}"/>
+                                                        <FontIcon Glyph="{Binding IconGlyph}" FontSize="15" Foreground="{Binding IconFg}"/>
+                                                    </Grid>
+                                                    <Image Source="{Binding IconSource}" Visibility="{Binding IconImageVisibility}" Width="24" Height="24" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Grid>
+                                                <StackPanel Grid.Column="1" Spacing="4" MinWidth="0" MaxWidth="300">
+                                                    <Grid ColumnSpacing="8">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TitleTextBrush}" TextTrimming="CharacterEllipsis"/>
+                                                        <Border Grid.Column="1" Background="{Binding ActionBg}" CornerRadius="8" Padding="8,3">
+                                                            <TextBlock Text="{Binding BadgeText}" FontSize="11" FontWeight="SemiBold" Foreground="{Binding SuggestionFg}" TextTrimming="CharacterEllipsis"/>
+                                                        </Border>
+                                                    </Grid>
+                                                    <TextBlock Text="{Binding Detail}" FontSize="11" Foreground="{StaticResource SubtleTextBrush}" TextTrimming="CharacterEllipsis"/>
+                                                    <TextBlock Text="{Binding MetaText}" FontSize="11" Foreground="{StaticResource MutedTextBrush}" TextTrimming="CharacterEllipsis"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="2" Spacing="5" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                                    <TextBlock Text="{Binding Memory}" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource BodyTextBrush}" HorizontalAlignment="Right" TextTrimming="CharacterEllipsis"/>
+                                                    <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Right">
+                                                        <Ellipse Width="7" Height="7" Fill="{Binding StatusDot}" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="{Binding RiskText}" FontSize="11" Foreground="{Binding RiskFg}" TextTrimming="CharacterEllipsis"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <TextBlock x:Name="BackgroundPreviewEmptyText" Text="暂无需要温和关闭的后台应用" FontSize="13" Foreground="{StaticResource SubtleTextBrush}" HorizontalAlignment="Center" Margin="0,8" Visibility="Collapsed"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border x:Name="RiskPreviewCard" Grid.Column="1" Style="{StaticResource CardBorderStyle}" Padding="18">
+                        <StackPanel Spacing="14">
+                            <Grid ColumnSpacing="10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Spacing="3" MinWidth="0">
+                                    <TextBlock Text="高风险进程" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource TitleTextBrush}" TextTrimming="CharacterEllipsis"/>
+                                    <TextBlock Text="需确认、跳过或强制处理的项目" FontSize="12" Foreground="{StaticResource SubtleTextBrush}" TextTrimming="CharacterEllipsis"/>
+                                </StackPanel>
+                                <Border Grid.Column="1" Style="{StaticResource PreviewCountBadgeStyle}">
+                                    <TextBlock x:Name="RiskPreviewCountText" Text="暂无" FontSize="11" FontWeight="SemiBold" Foreground="{StaticResource MutedTextBrush}"/>
+                                </Border>
+                                <Button Grid.Column="2" Style="{StaticResource SubtleButtonStyle}" Click="ViewAllCandidates_Click" MinHeight="38" Padding="12,7" AutomationProperties.Name="查看全部高风险进程">
+                                    <StackPanel Orientation="Horizontal" Spacing="6">
+                                        <TextBlock Text="查看全部" Foreground="{StaticResource BodyTextBrush}" FontSize="12"/>
+                                        <FontIcon Glyph="&#xE72A;" FontSize="12" Foreground="{StaticResource BodyTextBrush}"/>
+                                    </StackPanel>
+                                </Button>
+                            </Grid>
+
+                            <ItemsControl x:Name="RiskPreviewList">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Style="{StaticResource PreviewRowStyle}">
+                                            <Grid ColumnSpacing="12">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid Width="36" Height="36" VerticalAlignment="Center">
+                                                    <Grid Visibility="{Binding FallbackIconVisibility}">
+                                                        <Ellipse Fill="{Binding IconBg}"/>
+                                                        <FontIcon Glyph="{Binding IconGlyph}" FontSize="15" Foreground="{Binding IconFg}"/>
+                                                    </Grid>
+                                                    <Image Source="{Binding IconSource}" Visibility="{Binding IconImageVisibility}" Width="24" Height="24" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Grid>
+                                                <StackPanel Grid.Column="1" Spacing="4" MinWidth="0" MaxWidth="300">
+                                                    <Grid ColumnSpacing="8">
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="*"/>
+                                                            <ColumnDefinition Width="Auto"/>
+                                                        </Grid.ColumnDefinitions>
+                                                        <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TitleTextBrush}" TextTrimming="CharacterEllipsis"/>
+                                                        <Border Grid.Column="1" Background="{Binding ActionBg}" CornerRadius="8" Padding="8,3">
+                                                            <TextBlock Text="{Binding BadgeText}" FontSize="11" FontWeight="SemiBold" Foreground="{Binding SuggestionFg}" TextTrimming="CharacterEllipsis"/>
+                                                        </Border>
+                                                    </Grid>
+                                                    <TextBlock Text="{Binding Detail}" FontSize="11" Foreground="{StaticResource SubtleTextBrush}" TextTrimming="CharacterEllipsis"/>
+                                                    <TextBlock Text="{Binding MetaText}" FontSize="11" Foreground="{StaticResource MutedTextBrush}" TextTrimming="CharacterEllipsis"/>
+                                                </StackPanel>
+                                                <StackPanel Grid.Column="2" Spacing="5" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                                    <TextBlock Text="{Binding Memory}" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource BodyTextBrush}" HorizontalAlignment="Right" TextTrimming="CharacterEllipsis"/>
+                                                    <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Right">
+                                                        <Ellipse Width="7" Height="7" Fill="{Binding StatusDot}" VerticalAlignment="Center"/>
+                                                        <TextBlock Text="{Binding RiskText}" FontSize="11" Foreground="{Binding RiskFg}" TextTrimming="CharacterEllipsis"/>
+                                                    </StackPanel>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+
+                            <TextBlock x:Name="RiskPreviewEmptyText" Text="暂无高风险或需强制处理的进程" FontSize="13" Foreground="{StaticResource SubtleTextBrush}" HorizontalAlignment="Center" Margin="0,8" Visibility="Collapsed"/>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <Grid x:Name="InsightGrid" ColumnSpacing="14" RowSpacing="14">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Border x:Name="StartupInsightCard" Style="{StaticResource CardBorderStyle}" Padding="18,16">
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Width="38" Height="38">
+                                <Ellipse Fill="{StaticResource CopperSoftBrush}"/>
+                                <FontIcon Glyph="&#xE7F4;" FontSize="17" Foreground="{StaticResource CopperBrush}"/>
+                            </Grid>
+                            <StackPanel Grid.Column="1" Spacing="4" MinWidth="0">
+                                <TextBlock Text="启动项影响" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TitleTextBrush}"/>
+                                <TextBlock x:Name="StartupImpactText" Text="扫描后显示可禁用建议" FontSize="12" Foreground="{StaticResource SubtleTextBrush}" TextWrapping="Wrap" MaxLines="2"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Border x:Name="HabitInsightCard" Grid.Column="1" Style="{StaticResource CardBorderStyle}" Padding="18,16">
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Width="38" Height="38">
+                                <Ellipse Fill="{StaticResource CyanSoftBrush}"/>
+                                <FontIcon Glyph="&#xE946;" FontSize="17" Foreground="{StaticResource AccentLightBrush}"/>
+                            </Grid>
+                            <StackPanel Grid.Column="1" Spacing="4" MinWidth="0">
+                                <TextBlock Text="本地习惯建议" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TitleTextBrush}"/>
+                                <TextBlock x:Name="HabitSuggestionText" Text="只在本机记录，不上传进程历史" FontSize="12" Foreground="{StaticResource SubtleTextBrush}" TextWrapping="Wrap" MaxLines="2"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Border x:Name="EfficiencyInsightCard" Grid.Column="2" Style="{StaticResource CardBorderStyle}" Padding="18,16">
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Width="38" Height="38">
+                                <Ellipse Fill="{StaticResource SafeSoftBrush}"/>
+                                <FontIcon Glyph="&#xE72E;" FontSize="17" Foreground="{StaticResource SafeBrush}"/>
+                            </Grid>
+                            <StackPanel Grid.Column="1" Spacing="4" MinWidth="0">
+                                <TextBlock Text="低风险优化模式" FontSize="13" FontWeight="SemiBold" Foreground="{StaticResource TitleTextBrush}"/>
+                                <TextBlock x:Name="EfficiencyModeText" Text="当前仅确认关闭，已预留降低后台干扰入口" FontSize="12" Foreground="{StaticResource SubtleTextBrush}" TextWrapping="Wrap" MaxLines="2"/>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+                </Grid>
+
                 <Border x:Name="ProcessTableBorder" Style="{StaticResource CardBorderStyle}" Padding="0" Visibility="Collapsed">
                     <StackPanel>
                         <Grid x:Name="ProcessToolbar" Padding="22,20,22,14" ColumnSpacing="12" RowSpacing="12">
@@ -307,7 +536,7 @@
 
                         <ScrollViewer HorizontalScrollMode="Auto" HorizontalScrollBarVisibility="Auto" VerticalScrollMode="Disabled" VerticalScrollBarVisibility="Disabled">
                             <StackPanel MinWidth="820">
-                                <Border Padding="22,10" Background="#660B1726" BorderBrush="{StaticResource DividerBrush}" BorderThickness="0,1,0,1">
+                                <Border Padding="22,10" Background="{StaticResource SurfaceElevatedBrush}" BorderBrush="{StaticResource DividerBrush}" BorderThickness="0,1,0,1">
                                     <Grid ColumnSpacing="12">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="*"/>
@@ -319,7 +548,7 @@
                                         </Grid.ColumnDefinitions>
                                         <TextBlock Grid.Column="0" Text="进程名称" Style="{StaticResource ColumnHeaderStyle}"/>
                                         <TextBlock Grid.Column="1" Text="内存占用" Style="{StaticResource ColumnHeaderStyle}" TextTrimming="CharacterEllipsis"/>
-                                        <TextBlock Grid.Column="2" Text="CPU" Style="{StaticResource ColumnHeaderStyle}"/>
+                                        <TextBlock Grid.Column="2" Text="实例" Style="{StaticResource ColumnHeaderStyle}"/>
                                         <TextBlock Grid.Column="3" Text="状态" Style="{StaticResource ColumnHeaderStyle}"/>
                                         <TextBlock Grid.Column="4" Text="建议" Style="{StaticResource ColumnHeaderStyle}"/>
                                         <TextBlock Grid.Column="5" Text="操作" Style="{StaticResource ColumnHeaderStyle}"/>
@@ -353,8 +582,11 @@
                                                             <ColumnDefinition Width="*"/>
                                                         </Grid.ColumnDefinitions>
                                                         <Grid Width="34" Height="34">
-                                                            <Ellipse Fill="{Binding IconBg}"/>
-                                                            <FontIcon Glyph="{Binding IconGlyph}" FontSize="15" Foreground="{Binding IconFg}"/>
+                                                            <Grid Visibility="{Binding FallbackIconVisibility}">
+                                                                <Ellipse Fill="{Binding IconBg}"/>
+                                                                <FontIcon Glyph="{Binding IconGlyph}" FontSize="15" Foreground="{Binding IconFg}"/>
+                                                            </Grid>
+                                                            <Image Source="{Binding IconSource}" Visibility="{Binding IconImageVisibility}" Width="24" Height="24" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                                         </Grid>
                                                         <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center" MinWidth="0">
                                                             <TextBlock Text="{Binding Name}" FontSize="14" FontWeight="SemiBold" Foreground="{StaticResource TitleTextBrush}" TextTrimming="CharacterEllipsis"/>
@@ -362,7 +594,7 @@
                                                         </StackPanel>
                                                     </Grid>
                                                     <TextBlock Grid.Column="1" Text="{Binding Memory}" FontSize="13" Foreground="{StaticResource BodyTextBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
-                                                    <TextBlock Grid.Column="2" Text="{Binding Cpu}" FontSize="13" Foreground="{StaticResource BodyTextBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                                    <TextBlock Grid.Column="2" Text="{Binding Instances}" FontSize="13" Foreground="{StaticResource BodyTextBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
                                                     <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="7" VerticalAlignment="Center">
                                                         <Ellipse Width="8" Height="8" Fill="{Binding StatusDot}"/>
                                                         <TextBlock Text="{Binding StatusText}" FontSize="12" Foreground="{StaticResource MutedTextBrush}" TextTrimming="CharacterEllipsis"/>
@@ -371,7 +603,7 @@
                                                         <TextBlock Text="{Binding Suggestion}" FontSize="12" FontWeight="SemiBold" Foreground="{Binding SuggestionFg}" TextTrimming="CharacterEllipsis"/>
                                                     </Border>
                                                     <StackPanel Grid.Column="5" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
-                                                        <Button Content="关闭" Tag="{Binding Id}" Click="CloseProcess_Click" Style="{StaticResource TableActionButtonStyle}"/>
+                                                        <Button Content="优化" Tag="{Binding GroupKey}" Click="CloseProcess_Click" Style="{StaticResource TableActionButtonStyle}"/>
                                                     </StackPanel>
                                                 </Grid>
                                             </Border>

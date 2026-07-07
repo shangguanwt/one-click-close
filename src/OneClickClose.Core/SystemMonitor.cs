@@ -49,6 +49,16 @@ public class SystemSnapshot
     /// <summary>系统温度（摄氏度），无法获取时为 null。</summary>
     public float? TemperatureC { get; set; }
 
+    public float? CpuTemperatureC { get; set; }
+
+    public float? GpuTemperatureC { get; set; }
+
+    public float? MotherboardTemperatureC { get; set; }
+
+    public string TemperatureSource { get; set; }
+
+    public string TemperatureUnavailableReason { get; set; }
+
     /// <summary>电池剩余电量百分比，无电池时为 null。</summary>
     public float? BatteryPercent { get; set; }
 
@@ -92,6 +102,9 @@ public class ProcessResourceRecord
 /// </summary>
 public class SystemMonitor
 {
+    private readonly IHardwareTemperatureProvider _temperatureProvider;
+    private readonly Func<float?> _wmiTemperatureReader;
+
     // ---------- CPU 两次采样所需的前一次状态 ----------
     private DateTime _previousSampleTime;
     private TimeSpan _previousTotalProcessorTime;
@@ -112,8 +125,29 @@ public class SystemMonitor
     // ---------- 线程安全锁 ----------
     private readonly object _lock = new();
 
-    // ---------- 取消令牌 ----------
-    private CancellationTokenSource _cancellationTokenSource;
+    public SystemMonitor()
+        : this(new LibreHardwareTemperatureProvider(), GetTemperatureC)
+    {
+    }
+
+    internal SystemMonitor(IHardwareTemperatureProvider temperatureProvider)
+        : this(temperatureProvider, GetTemperatureC)
+    {
+    }
+
+    internal SystemMonitor(IHardwareTemperatureProvider temperatureProvider, Func<float?> wmiTemperatureReader)
+    {
+        _temperatureProvider = temperatureProvider;
+        _wmiTemperatureReader = wmiTemperatureReader ?? GetTemperatureC;
+    }
+
+    /// <summary>
+    /// 同步采集当前系统资源快照。保留给 WinUI 壳和兼容调用路径使用。
+    /// </summary>
+    public SystemSnapshot CaptureSnapshot()
+    {
+        return CaptureSnapshotAsync(CancellationToken.None).GetAwaiter().GetResult();
+    }
 
     /// <summary>
     /// 异步采集当前系统资源快照。
@@ -136,6 +170,8 @@ public class SystemMonitor
                 var now = DateTime.UtcNow;
                 var totalProcessorTime = SumTotalProcessorTime(processes);
 
+                var elapsed = _firstSample ? TimeSpan.Zero : now - _previousSampleTime;
+
                 if (_firstSample)
                 {
                     snapshot.CpuUsagePercent = 0f;
@@ -146,7 +182,6 @@ public class SystemMonitor
                 }
                 else
                 {
-                    var elapsed = now - _previousSampleTime;
                     if (elapsed.TotalMilliseconds > 0)
                     {
                         var usedDelta = (totalProcessorTime - _previousTotalProcessorTime).TotalMilliseconds;
@@ -165,7 +200,7 @@ public class SystemMonitor
                 }
 
                 // —— Top 进程 ——
-                snapshot.TopProcesses = BuildTopProcesses(processes, elapsed: _firstSample ? TimeSpan.Zero : now - _previousSampleTime);
+                snapshot.TopProcesses = BuildTopProcesses(processes, elapsed);
 
                 // —— GPU（同步，性能计数器本地） ——
                 snapshot.GpuUsagePercent = GetGpuUsage();
@@ -184,7 +219,7 @@ public class SystemMonitor
         {
             Task.Run(() => { snapshot.DiskUsagePercent = GetDiskUsage(); }, cancellationToken),
             Task.Run(() => { snapshot.NetworkMbps = GetNetworkMbps(DateTime.UtcNow); }, cancellationToken),
-            Task.Run(() => { snapshot.TemperatureC = GetTemperatureC(); }, cancellationToken),
+            Task.Run(() => { ApplyTemperatureReading(snapshot); }, cancellationToken),
             Task.Run(() => { snapshot.BatteryPercent = GetBatteryPercent(); }, cancellationToken)
         };
 
@@ -452,6 +487,54 @@ public class SystemMonitor
             // 不支持时返回 null
         }
         return null;
+    }
+
+    private void ApplyTemperatureReading(SystemSnapshot snapshot)
+    {
+        HardwareTemperatureReading reading = null;
+        try
+        {
+            reading = _temperatureProvider?.ReadTemperatures();
+        }
+        catch (Exception ex)
+        {
+            reading = new HardwareTemperatureReading
+            {
+                Source = "LibreHardwareMonitor",
+                UnavailableReason = ex.Message
+            };
+        }
+
+        if (reading != null && reading.HasAnyTemperature)
+        {
+            snapshot.CpuTemperatureC = reading.CpuTemperatureC;
+            snapshot.GpuTemperatureC = reading.GpuTemperatureC;
+            snapshot.MotherboardTemperatureC = reading.MotherboardTemperatureC;
+            snapshot.TemperatureC = reading.CpuTemperatureC
+                ?? reading.GpuTemperatureC
+                ?? reading.MotherboardTemperatureC;
+            snapshot.TemperatureSource = string.IsNullOrWhiteSpace(reading.Source)
+                ? "LibreHardwareMonitor"
+                : reading.Source;
+            snapshot.TemperatureUnavailableReason = null;
+            return;
+        }
+
+        float? wmiTemperature = _wmiTemperatureReader();
+        if (wmiTemperature.HasValue)
+        {
+            snapshot.CpuTemperatureC = wmiTemperature;
+            snapshot.TemperatureC = wmiTemperature;
+            snapshot.TemperatureSource = "WMI";
+            snapshot.TemperatureUnavailableReason = null;
+            return;
+        }
+
+        snapshot.TemperatureC = null;
+        snapshot.TemperatureSource = reading?.Source ?? "Unavailable";
+        snapshot.TemperatureUnavailableReason = !string.IsNullOrWhiteSpace(reading?.UnavailableReason)
+            ? reading.UnavailableReason
+            : "未检测到温度传感器";
     }
 
     /// <summary>

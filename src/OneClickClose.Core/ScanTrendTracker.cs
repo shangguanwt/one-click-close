@@ -6,11 +6,14 @@ namespace OneClickClose.Core;
 
 /// <summary>
 /// 扫描趋势追踪器——存储上一次扫描的指标，计算百分比变化。
-/// 持久化到 trend.json（与 history.json 同目录）。
+/// 持久化到本地用户数据目录，避免污染 Release 解压目录。
 /// </summary>
 public static class ScanTrendTracker
 {
-    private static readonly string _filePath = Path.Combine(AppContext.BaseDirectory, "trend.json");
+    private const string AppName = "OneClickClose";
+
+    private static readonly string _dataDirectory = GetDataDirectory();
+    private static readonly string _filePath = Path.Combine(_dataDirectory, "trend.json");
 
     /// <summary>趋势数据键名。</summary>
     public const string KeyCandidates = "candidates";
@@ -33,6 +36,7 @@ public static class ScanTrendTracker
         };
         try
         {
+            Directory.CreateDirectory(_dataDirectory);
             var json = JsonSerializer.Serialize(data, new JsonSerializerOptions { WriteIndented = true });
             File.WriteAllText(_filePath, json);
         }
@@ -76,5 +80,16 @@ public static class ScanTrendTracker
         public int BackgroundSoftware { get; set; }
         public int StartupItems { get; set; }
         public DateTime Timestamp { get; set; }
+    }
+
+    private static string GetDataDirectory()
+    {
+        string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        if (string.IsNullOrWhiteSpace(localAppData))
+        {
+            localAppData = Path.GetTempPath();
+        }
+
+        return Path.Combine(localAppData, AppName);
     }
 }

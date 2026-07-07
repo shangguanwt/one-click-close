@@ -10,6 +10,10 @@ namespace OneClickClose.Core
         public int waitSeconds { get; set; }
         public int gracefulTimeoutSeconds { get; set; }
         public int queryTimeoutSeconds { get; set; }
+        public bool? autoDetectUserApps { get; set; }
+        public bool? closeShutdownBlockingApps { get; set; }
+        public int candidateMemoryThresholdMb { get; set; }
+        public bool? forceAfterGracefulFailure { get; set; }
         public string[] targetNames { get; set; }
         public string[] protectedNames { get; set; }
         public string[] forceAllowedNames { get; set; }
@@ -52,6 +56,21 @@ namespace OneClickClose.Core
             return JsonFileStore.MakeSet(forceAllowedNames);
         }
 
+        public bool AutoDetectUserApps
+        {
+            get { return autoDetectUserApps.GetValueOrDefault(true); }
+        }
+
+        public bool CloseShutdownBlockingApps
+        {
+            get { return closeShutdownBlockingApps.GetValueOrDefault(true); }
+        }
+
+        public bool ForceAfterGracefulFailure
+        {
+            get { return forceAfterGracefulFailure.GetValueOrDefault(true); }
+        }
+
         private static AppConfig Normalize(AppConfig config)
         {
             if (config == null)
@@ -72,6 +91,26 @@ namespace OneClickClose.Core
             if (config.queryTimeoutSeconds <= 0)
             {
                 config.queryTimeoutSeconds = 3;
+            }
+
+            if (!config.autoDetectUserApps.HasValue)
+            {
+                config.autoDetectUserApps = true;
+            }
+
+            if (!config.closeShutdownBlockingApps.HasValue)
+            {
+                config.closeShutdownBlockingApps = true;
+            }
+
+            if (config.candidateMemoryThresholdMb <= 0)
+            {
+                config.candidateMemoryThresholdMb = 128;
+            }
+
+            if (!config.forceAfterGracefulFailure.HasValue)
+            {
+                config.forceAfterGracefulFailure = true;
             }
 
             if (config.targetNames == null)
@@ -99,10 +138,15 @@ namespace OneClickClose.Core
                 waitSeconds = 5,
                 gracefulTimeoutSeconds = 5,
                 queryTimeoutSeconds = 3,
+                autoDetectUserApps = true,
+                closeShutdownBlockingApps = true,
+                candidateMemoryThresholdMb = 128,
+                forceAfterGracefulFailure = true,
                 targetNames = new[]
                 {
                     "chrome", "msedge", "firefox", "Telegram", "Discord",
-                    "Spotify", "Slack", "notepad", "Code"
+                    "Spotify", "Slack", "notepad", "Code",
+                    "Weixin", "TIM", "QQExternal", "TXPlatform", "WeChatAppEx"
                 },
                 protectedNames = new[]
                 {

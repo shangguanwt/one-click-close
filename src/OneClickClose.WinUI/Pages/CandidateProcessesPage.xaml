@@ -8,151 +8,384 @@
     mc:Ignorable="d"
     Background="Transparent">
 
-    <Grid Padding="4,0" RowSpacing="16">
+    <Grid Padding="4,0,4,2" RowSpacing="12">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Title + count -->
-        <StackPanel Orientation="Horizontal" Spacing="10">
-            <TextBlock Text="候选进程" Style="{StaticResource PageTitleStyle}"/>
-            <Border x:Name="CountBadge" Background="{StaticResource SurfaceElevatedBrush}" CornerRadius="4"
-                    Padding="8,3" VerticalAlignment="Center" Visibility="Collapsed"
-                    BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1">
-                <TextBlock x:Name="CountText" Foreground="{StaticResource BodyTextBrush}"
-                           FontSize="12" FontWeight="Medium"/>
-            </Border>
-        </StackPanel>
-
-        <!-- Search / Filter toolbar -->
-        <Grid Grid.Row="1" ColumnSpacing="8">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
-            <TextBox x:Name="SearchBox" PlaceholderText="搜索进程名..." TextChanged="SearchBox_TextChanged"
-                     FontSize="13" CornerRadius="8"/>
-            <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="2">
-                <Button x:Name="FilterAllBtn" Content="全部" Click="FilterAllBtn_Click"
-                        CornerRadius="6" Padding="10,6" FontSize="12" FontWeight="SemiBold"/>
-                <Button x:Name="FilterGracefulBtn" Content="温和" Click="FilterGracefulBtn_Click"
-                        CornerRadius="6" Padding="10,6" FontSize="12"/>
-                <Button x:Name="FilterForceBtn" Content="强制" Click="FilterForceBtn_Click"
-                        CornerRadius="6" Padding="10,6" FontSize="12"/>
-            </StackPanel>
-        </Grid>
-
-        <!-- Column header -->
-        <Border Grid.Row="2" Style="{StaticResource HeaderBarStyle}">
-            <Grid ColumnSpacing="8">
+        <Border Grid.Row="0" Style="{StaticResource CardBorderStyle}" Padding="12">
+            <Grid ColumnSpacing="10">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="2.5*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="0.6*"/>
-                    <ColumnDefinition Width="0.8*"/>
-                    <ColumnDefinition Width="0.6*"/>
+                    <ColumnDefinition Width="2.4*"/>
+                    <ColumnDefinition Width="156"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="进程" Style="{StaticResource ColumnHeaderStyle}"/>
-                <TextBlock Grid.Column="1" Text="操作" Style="{StaticResource ColumnHeaderStyle}"/>
-                <TextBlock Grid.Column="2" Text="数量" Style="{StaticResource ColumnHeaderStyle}"/>
-                <TextBlock Grid.Column="3" Text="内存" Style="{StaticResource ColumnHeaderStyle}"/>
-                <TextBlock Grid.Column="4" Text="风险" Style="{StaticResource ColumnHeaderStyle}"/>
+
+                <TextBox x:Name="SearchBox"
+                         PlaceholderText="搜索应用、窗口标题、路径或 PID..."
+                         TextChanged="SearchBox_TextChanged"
+                         Style="{StaticResource SubtleTextBoxStyle}"
+                         MinHeight="38"/>
+
+                <ComboBox x:Name="FilterCombo"
+                          Grid.Column="1"
+                          MinHeight="38"
+                          SelectedIndex="0"
+                          SelectionChanged="FilterCombo_SelectionChanged"
+                          HorizontalAlignment="Stretch">
+                    <ComboBoxItem Content="全部"/>
+                    <ComboBoxItem Content="可关闭"/>
+                    <ComboBoxItem Content="已保护"/>
+                    <ComboBoxItem Content="已跳过"/>
+                    <ComboBoxItem Content="高风险"/>
+                </ComboBox>
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <TextBlock Text="低风险" Foreground="{StaticResource BodyTextBrush}" FontSize="13" VerticalAlignment="Center"/>
+                    <ToggleSwitch x:Name="LowRiskToggle"
+                                  Toggled="LowRiskToggle_Toggled"
+                                  OnContent=""
+                                  OffContent=""
+                                  MinWidth="54"/>
+                </StackPanel>
+
+                <Border Grid.Column="3"
+                        Style="{StaticResource HeroProcessBadgeStyle}"
+                        Padding="10,6"
+                        VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Spacing="7">
+                        <FontIcon Glyph="&#xE72E;" FontSize="13" Foreground="{StaticResource SafeBrush}"/>
+                        <TextBlock Text="系统与白名单已保护" Foreground="{StaticResource BodyTextBrush}" FontSize="12" VerticalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <Button Grid.Column="4"
+                        x:Name="RefreshButton"
+                        Style="{StaticResource PrimaryButtonStyle}"
+                        Click="RefreshScan_Click"
+                        MinHeight="38"
+                        Padding="15,8">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE72C;" FontSize="14" Foreground="White"/>
+                        <TextBlock Text="重新扫描" Foreground="White" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
             </Grid>
         </Border>
 
-        <!-- Process list -->
-        <ScrollViewer Grid.Row="3">
-            <ItemsControl x:Name="ProcessList">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border Background="{StaticResource SurfaceBrush}" CornerRadius="8"
-                                Padding="16,10" Margin="0,0,0,3"
-                                BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1"
-Opacity="{Binding Opacity}">
-                            <Border.ContextFlyout>
-                                <MenuFlyout>
-                                    <MenuFlyoutItem Text="添加到保护名单" Click="AddToProtected_Click" Tag="{Binding}">
-                                        <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE72E;"/></MenuFlyoutItem.Icon>
-                                    </MenuFlyoutItem>
-                                    <MenuFlyoutItem Text="添加到强制清理" Click="AddToForce_Click" Tag="{Binding}">
-                                        <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE711;"/></MenuFlyoutItem.Icon>
-                                    </MenuFlyoutItem>
-                                    <MenuFlyoutSeparator/>
-                                    <MenuFlyoutItem Text="从目标名单移除" Click="RemoveFromTarget_Click" Tag="{Binding}">
-                                        <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE74D;"/></MenuFlyoutItem.Icon>
-                                    </MenuFlyoutItem>
-                                </MenuFlyout>
-                            </Border.ContextFlyout>
+        <Border Grid.Row="1" Style="{StaticResource CardBorderStyle}" Padding="0">
+            <Grid RowSpacing="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
 
-                            <Grid ColumnSpacing="8">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="2.5*"/>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="0.6*"/>
-                                    <ColumnDefinition Width="0.8*"/>
-                                    <ColumnDefinition Width="0.6*"/>
-                                </Grid.ColumnDefinitions>
+                <Border Padding="18,10" BorderBrush="{StaticResource DividerBrush}" BorderThickness="0,0,0,1">
+                    <Grid ColumnSpacing="16" Margin="0,0,42,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="3.15*"/>
+                            <ColumnDefinition Width="0.9*"/>
+                            <ColumnDefinition Width="1.75*"/>
+                            <ColumnDefinition Width="0.95*"/>
+                            <ColumnDefinition Width="168"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <TextBlock Text="应用组" Style="{StaticResource ColumnHeaderStyle}"/>
+                            <Border x:Name="CountBadge"
+                                    Background="{StaticResource SurfaceElevatedBrush}"
+                                    CornerRadius="7"
+                                    Padding="8,2"
+                                    Visibility="Collapsed"
+                                    BorderBrush="{StaticResource StrokeBrush}"
+                                    BorderThickness="1">
+                                <TextBlock x:Name="CountText" Foreground="{StaticResource BodyTextBrush}" FontSize="11" FontWeight="Medium"/>
+                            </Border>
+                        </StackPanel>
+                        <TextBlock Grid.Column="1" Text="进程 / 内存" Style="{StaticResource ColumnHeaderStyle}"/>
+                        <TextBlock Grid.Column="2" Text="建议" Style="{StaticResource ColumnHeaderStyle}"/>
+                        <TextBlock Grid.Column="3" Text="风险" Style="{StaticResource ColumnHeaderStyle}" HorizontalAlignment="Center"/>
+                        <TextBlock Grid.Column="4" Text="操作" Style="{StaticResource ColumnHeaderStyle}" HorizontalAlignment="Center"/>
+                    </Grid>
+                </Border>
 
-                                <StackPanel Grid.Column="0" Spacing="1">
-                                    <TextBlock Text="{Binding Process}"
-                                               Foreground="{StaticResource TitleTextBrush}"
-                                               FontSize="13" FontWeight="Medium"/>
-                                    <TextBlock Text="{Binding Note}"
-                                               Foreground="{StaticResource SubtleTextBrush}"
-                                               FontSize="11" TextTrimming="CharacterEllipsis"/>
-                                </StackPanel>
+                <Grid Grid.Row="1">
+                    <ListView x:Name="ProcessList"
+                              HorizontalAlignment="Stretch"
+                              SelectionMode="None"
+                              IsItemClickEnabled="False"
+                              HorizontalContentAlignment="Stretch"
+                              ScrollViewer.HorizontalScrollMode="Disabled"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                              ContainerContentChanging="ProcessList_ContainerContentChanging">
+                        <ListView.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <ItemsStackPanel Orientation="Vertical"/>
+                            </ItemsPanelTemplate>
+                        </ListView.ItemsPanel>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Padding" Value="0"/>
+                                <Setter Property="Margin" Value="0"/>
+                                <Setter Property="MinHeight" Value="0"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <Expander Margin="0"
+                                              Background="{StaticResource SurfaceBrush}"
+                                              BorderBrush="{StaticResource DividerBrush}"
+                                              BorderThickness="0,0,0,1"
+                                              HorizontalAlignment="Stretch"
+                                              HorizontalContentAlignment="Stretch"
+                                              IsExpanded="False"
+                                              Opacity="{Binding Opacity}">
+                                        <Expander.ContextFlyout>
+                                            <MenuFlyout>
+                                                <MenuFlyoutItem Text="添加到白名单" Click="AddToProtected_Click" Tag="{Binding}">
+                                                    <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE72E;"/></MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutItem Text="添加到目标名单" Click="AddToTarget_Click" Tag="{Binding}">
+                                                    <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE710;"/></MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutItem Text="添加到强制清理" Click="AddToForce_Click" Tag="{Binding}">
+                                                    <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE711;"/></MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutSeparator/>
+                                                <MenuFlyoutItem Text="从目标名单移除" Click="RemoveFromTarget_Click" Tag="{Binding}">
+                                                    <MenuFlyoutItem.Icon><FontIcon Glyph="&#xE74D;"/></MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+                                            </MenuFlyout>
+                                        </Expander.ContextFlyout>
 
-                                <!-- Low-saturation tag badge -->
-                                <Border Grid.Column="1" Style="{StaticResource TagBadgeStyle}"
-                                        Background="{Binding ActionColor}">
-                                    <TextBlock Text="{Binding Action}"
-                                               Foreground="{StaticResource BodyTextBrush}" FontSize="11"/>
-                                </Border>
+                                        <Expander.Header>
+                                            <Grid Padding="18,10" ColumnSpacing="16" HorizontalAlignment="Stretch">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="3.15*"/>
+                                                    <ColumnDefinition Width="0.9*"/>
+                                                    <ColumnDefinition Width="1.75*"/>
+                                                    <ColumnDefinition Width="0.95*"/>
+                                                    <ColumnDefinition Width="168"/>
+                                                </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="2" Text="{Binding Count}"
-                                           Foreground="{StaticResource BodyTextBrush}" FontSize="13"
-                                           VerticalAlignment="Center"/>
+                                                <Grid ColumnSpacing="12" MinWidth="0">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <Grid Width="34" Height="34" VerticalAlignment="Center">
+                                                        <Grid Visibility="{Binding FallbackIconVisibility}">
+                                                            <Border Background="{Binding IconBackground}" CornerRadius="8"/>
+                                                            <FontIcon Glyph="{Binding IconGlyph}" FontSize="14" Foreground="{Binding IconForeground}"/>
+                                                        </Grid>
+                                                        <Image Source="{Binding IconSource}" Visibility="{Binding IconImageVisibility}" Width="28" Height="28" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Grid>
+                                                    <StackPanel Grid.Column="1" Spacing="2" MinWidth="0" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding Process}" Foreground="{StaticResource TitleTextBrush}" FontSize="15" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                                                        <TextBlock Text="{Binding DetailLine}" Foreground="{StaticResource SubtleTextBrush}" FontSize="12" TextTrimming="CharacterEllipsis"/>
+                                                    </StackPanel>
+                                                </Grid>
 
-                                <TextBlock Grid.Column="3" Text="{Binding MemoryText}"
-                                           Foreground="{StaticResource MutedTextBrush}" FontSize="12"
-                                           VerticalAlignment="Center"/>
+                                                <StackPanel Grid.Column="1" Spacing="2" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding CountText}" Foreground="{StaticResource BodyTextBrush}" FontSize="12"/>
+                                                    <TextBlock Text="{Binding MemoryText}" Foreground="{Binding MemoryColor}" FontSize="13" FontWeight="SemiBold"/>
+                                                </StackPanel>
 
-                                <TextBlock Grid.Column="4" Text="{Binding RiskText}" FontSize="12"
-                                           Foreground="{Binding RiskColor}" VerticalAlignment="Center"
-                                           FontWeight="Medium"/>
-                            </Grid>
+                                                <StackPanel Grid.Column="2" Spacing="4" VerticalAlignment="Center">
+                                                    <Border Background="{Binding ActionColor}" CornerRadius="8" Padding="8,3" HorizontalAlignment="Left">
+                                                        <TextBlock Text="{Binding Action}" Foreground="{StaticResource BodyTextBrush}" FontSize="12" FontWeight="SemiBold"/>
+                                                    </Border>
+                                                    <TextBlock Text="{Binding RecommendationText}" Foreground="{StaticResource BodyTextBrush}" FontSize="12" TextTrimming="CharacterEllipsis" MaxLines="1"/>
+                                                </StackPanel>
+
+                                                <StackPanel Grid.Column="3" Spacing="4" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                                    <Border Background="{Binding RiskBadgeBackground}" CornerRadius="8" Padding="8,4" MinWidth="82" HorizontalAlignment="Center">
+                                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                                            <Ellipse Width="7" Height="7" Fill="{Binding RiskDotColor}" VerticalAlignment="Center"/>
+                                                            <TextBlock Text="{Binding RiskLevelText}" Foreground="{Binding RiskColor}" FontSize="12" FontWeight="SemiBold"/>
+                                                        </StackPanel>
+                                                    </Border>
+                                                </StackPanel>
+
+                                                <StackPanel Grid.Column="4" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                                    <Button Content="{Binding PrimaryActionText}"
+                                                            Tag="{Binding}"
+                                                            Click="CloseGroup_Click"
+                                                            Style="{StaticResource TableActionButtonStyle}"
+                                                            MinHeight="31"
+                                                            IsEnabled="{Binding CanClose}"/>
+                                                    <Button Style="{StaticResource SubtleButtonStyle}"
+                                                            Width="34"
+                                                            Height="30"
+                                                            MinWidth="34"
+                                                            Padding="0"
+                                                            ToolTipService.ToolTip="更多操作">
+                                                        <Button.Content>
+                                                            <FontIcon Glyph="&#xE712;" FontSize="14" Foreground="{StaticResource BodyTextBrush}"/>
+                                                        </Button.Content>
+                                                        <Button.Flyout>
+                                                            <MenuFlyout>
+                                                                <MenuFlyoutItem Text="添加到白名单" Click="AddToProtected_Click" Tag="{Binding}"/>
+                                                                <MenuFlyoutItem Text="添加到目标名单" Click="AddToTarget_Click" Tag="{Binding}"/>
+                                                                <MenuFlyoutItem Text="添加到强制清理" Click="AddToForce_Click" Tag="{Binding}"/>
+                                                                <MenuFlyoutSeparator/>
+                                                                <MenuFlyoutItem Text="从目标名单移除" Click="RemoveFromTarget_Click" Tag="{Binding}"/>
+                                                            </MenuFlyout>
+                                                        </Button.Flyout>
+                                                    </Button>
+                                                </StackPanel>
+                                            </Grid>
+                                        </Expander.Header>
+
+                                        <Border Margin="18,0,42,10"
+                                                Background="{StaticResource SurfaceElevatedBrush}"
+                                                CornerRadius="10"
+                                                Padding="14,10"
+                                                BorderBrush="{StaticResource DividerBrush}"
+                                                BorderThickness="1"
+                                                HorizontalAlignment="Stretch">
+                                            <StackPanel Spacing="5" HorizontalAlignment="Stretch">
+                                                <Grid ColumnSpacing="12" HorizontalAlignment="Stretch">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="96"/>
+                                                        <ColumnDefinition Width="1.45*"/>
+                                                        <ColumnDefinition Width="2.15*"/>
+                                                        <ColumnDefinition Width="0.65*"/>
+                                                        <ColumnDefinition Width="0.65*"/>
+                                                        <ColumnDefinition Width="76"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Grid.Column="0" Text="PID" Style="{StaticResource ColumnHeaderStyle}"/>
+                                                    <TextBlock Grid.Column="1" Text="窗口" Style="{StaticResource ColumnHeaderStyle}"/>
+                                                    <TextBlock Grid.Column="2" Text="路径" Style="{StaticResource ColumnHeaderStyle}"/>
+                                                    <TextBlock Grid.Column="3" Text="内存" Style="{StaticResource ColumnHeaderStyle}" HorizontalAlignment="Center"/>
+                                                    <TextBlock Grid.Column="4" Text="风险" Style="{StaticResource ColumnHeaderStyle}" HorizontalAlignment="Center"/>
+                                                    <TextBlock Grid.Column="5" Text="操作" Style="{StaticResource ColumnHeaderStyle}" HorizontalAlignment="Center"/>
+                                                </Grid>
+
+                                                <ItemsControl ItemsSource="{Binding Children}" HorizontalAlignment="Stretch">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Border BorderBrush="{StaticResource DividerBrush}" BorderThickness="0,1,0,0" Padding="0,7,0,0" HorizontalAlignment="Stretch">
+                                                                <Grid ColumnSpacing="12" HorizontalAlignment="Stretch">
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="96"/>
+                                                                        <ColumnDefinition Width="1.45*"/>
+                                                                        <ColumnDefinition Width="2.15*"/>
+                                                                        <ColumnDefinition Width="0.65*"/>
+                                                                        <ColumnDefinition Width="0.65*"/>
+                                                                        <ColumnDefinition Width="76"/>
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <Grid Grid.Column="0" ColumnSpacing="7">
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="Auto"/>
+                                                                            <ColumnDefinition Width="*"/>
+                                                                        </Grid.ColumnDefinitions>
+                                                                        <Grid Width="22" Height="22" VerticalAlignment="Center">
+                                                                            <Grid Visibility="{Binding FallbackIconVisibility}">
+                                                                                <Border Background="{Binding IconBackground}" CornerRadius="5"/>
+                                                                                <FontIcon Glyph="{Binding IconGlyph}" FontSize="10" Foreground="{Binding IconForeground}"/>
+                                                                            </Grid>
+                                                                            <Image Source="{Binding IconSource}" Visibility="{Binding IconImageVisibility}" Width="18" Height="18" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                        </Grid>
+                                                                        <TextBlock Grid.Column="1" Text="{Binding Id}" FontSize="12" Foreground="{StaticResource BodyTextBrush}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                                                    </Grid>
+                                                                    <TextBlock Grid.Column="1" Text="{Binding WindowTitle}" FontSize="12" Foreground="{StaticResource BodyTextBrush}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                                                    <TextBlock Grid.Column="2" Text="{Binding Path}" FontSize="11" Foreground="{StaticResource SubtleTextBrush}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center"/>
+                                                                    <TextBlock Grid.Column="3" Text="{Binding MemoryText}" FontSize="12" Foreground="{StaticResource MutedTextBrush}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                                                    <TextBlock Grid.Column="4" Text="{Binding RiskText}" FontSize="12" Foreground="{Binding RiskColor}" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                                                    <Button Grid.Column="5" Content="{Binding PrimaryActionText}" Tag="{Binding Id}" Click="CloseChildProcess_Click" Style="{StaticResource TableActionButtonStyle}" MinWidth="58" MinHeight="29" Padding="10,5" HorizontalAlignment="Center" IsEnabled="{Binding CanClose}"/>
+                                                                </Grid>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </StackPanel>
+                                        </Border>
+                                    </Expander>
+                                </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                        <Border x:Name="EmptyState"
+                                Background="{StaticResource SurfaceBrush}"
+                                CornerRadius="12"
+                                Padding="40"
+                                Margin="18"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Top"
+                                BorderBrush="{StaticResource StrokeBrush}"
+                                BorderThickness="1">
+                            <StackPanel Spacing="6" HorizontalAlignment="Center">
+                                <FontIcon Glyph="&#xE9D5;" FontSize="36" Foreground="{StaticResource EmptyIconBrush}" HorizontalAlignment="Center"/>
+                                <TextBlock x:Name="EmptyText" Text="点击“重新扫描”查看全进程列表" Foreground="{StaticResource SubtleTextBrush}" FontSize="13" HorizontalAlignment="Center"/>
+                            </StackPanel>
                         </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
 
-        <!-- Empty state -->
-        <Border x:Name="EmptyState" Grid.Row="3" Background="{StaticResource SurfaceBrush}"
-                CornerRadius="12" Padding="40" HorizontalAlignment="Stretch" VerticalAlignment="Top"
-                BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1">
-            <StackPanel Spacing="6" HorizontalAlignment="Center">
-                <FontIcon Glyph="&#xE9D5;" FontSize="36" Foreground="{StaticResource EmptyIconBrush}"
-                          HorizontalAlignment="Center"/>
-                <TextBlock x:Name="EmptyText" Text="点击「扫描进程」查看候选列表"
-                           Foreground="{StaticResource SubtleTextBrush}" FontSize="13"
-                           HorizontalAlignment="Center"/>
-            </StackPanel>
+                        <Border x:Name="NoResultsState"
+                                Background="{StaticResource SurfaceBrush}"
+                                CornerRadius="12"
+                                Padding="40"
+                                Margin="18"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Top"
+                                BorderBrush="{StaticResource StrokeBrush}"
+                                BorderThickness="1"
+                                Visibility="Collapsed">
+                            <StackPanel Spacing="6" HorizontalAlignment="Center">
+                                <FontIcon Glyph="&#xE721;" FontSize="36" Foreground="{StaticResource EmptyIconBrush}" HorizontalAlignment="Center"/>
+                                <TextBlock Text="没有匹配的进程组" Foreground="{StaticResource SubtleTextBrush}" FontSize="13" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                </Grid>
+            </Grid>
         </Border>
 
-        <!-- No results -->
-        <Border x:Name="NoResultsState" Grid.Row="3" Background="{StaticResource SurfaceBrush}"
-                CornerRadius="12" Padding="40" HorizontalAlignment="Stretch" VerticalAlignment="Top"
-                BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1" Visibility="Collapsed">
-            <StackPanel Spacing="6" HorizontalAlignment="Center">
-                <FontIcon Glyph="&#xE721;" FontSize="36" Foreground="{StaticResource EmptyIconBrush}"
-                          HorizontalAlignment="Center"/>
-                <TextBlock Text="没有匹配的进程" Foreground="{StaticResource SubtleTextBrush}" FontSize="13"
-                           HorizontalAlignment="Center"/>
-            </StackPanel>
+        <Border Grid.Row="2" x:Name="ClosePreviewCard" Style="{StaticResource CardBorderStyle}" Padding="14,10">
+            <Grid ColumnSpacing="16">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Spacing="4" VerticalAlignment="Center">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <TextBlock Text="关闭前预览" Foreground="{StaticResource TitleTextBrush}" FontSize="15" FontWeight="SemiBold"/>
+                        <TextBlock Text="仅模拟预览，不会立即执行" Foreground="{StaticResource SubtleTextBrush}" FontSize="12" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <TextBlock x:Name="PreviewAppsText" Text="暂无可关闭应用" Foreground="{StaticResource SubtleTextBrush}" FontSize="12" TextWrapping="Wrap" MaxLines="1"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Spacing="1" VerticalAlignment="Center" MinWidth="176">
+                    <TextBlock x:Name="PreviewCountText" Text="即将关闭 0 个应用" Foreground="{StaticResource BodyTextBrush}" FontSize="12"/>
+                    <TextBlock x:Name="PreviewMemoryText" Text="预计释放内存 0 MB" Foreground="{StaticResource TitleTextBrush}" FontSize="17" FontWeight="SemiBold"/>
+                </StackPanel>
+
+                <Border Grid.Column="2"
+                        Background="{StaticResource SafeSoftBrush}"
+                        CornerRadius="9"
+                        Padding="10,6"
+                        VerticalAlignment="Center"
+                        HorizontalAlignment="Right">
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <FontIcon Glyph="&#xE72E;" FontSize="14" Foreground="{StaticResource SafeBrush}" VerticalAlignment="Center"/>
+                        <StackPanel Spacing="1">
+                            <TextBlock Text="安全保护" Foreground="{StaticResource BodyTextBrush}" FontSize="12" FontWeight="SemiBold"/>
+                            <TextBlock Text="跳过系统进程和白名单" Foreground="{StaticResource SubtleTextBrush}" FontSize="11"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <StackPanel Grid.Column="3" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <Button Content="取消" Click="CancelClosePreview_Click" Style="{StaticResource SubtleButtonStyle}" MinHeight="38" Padding="14,7"/>
+                    <Button x:Name="ConfirmCloseButton" Click="ConfirmCloseSelected_Click" Style="{StaticResource PrimaryButtonStyle}" MinHeight="38" Padding="17,8"/>
+                </StackPanel>
+            </Grid>
         </Border>
     </Grid>
 </Page>

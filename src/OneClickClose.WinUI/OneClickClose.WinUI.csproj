@@ -13,6 +13,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <WindowsPackageType>None</WindowsPackageType>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
     <EnableMsixTooling>true</EnableMsixTooling>
     <Platforms>x86;x64;ARM64</Platforms>
     <RuntimeIdentifier Condition="'$(RuntimeIdentifier)' == ''">win-$([System.Runtime.InteropServices.RuntimeInformation]::ProcessArchitecture.ToString().ToLowerInvariant())</RuntimeIdentifier>
@@ -27,12 +28,20 @@
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.28000.1839" />
     <PackageReference Include="Microsoft.Windows.SDK.BuildTools.WinApp" Version="0.3.2" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.*" />
+    <PackageReference Include="System.Drawing.Common" Version="9.0.*" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="..\..\close-user-apps.config.json" Link="close-user-apps.config.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Assets\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

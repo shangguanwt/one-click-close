@@ -8,89 +8,403 @@
     mc:Ignorable="d"
     Background="Transparent">
 
-    <Grid Padding="8" RowSpacing="16">
+    <Grid Padding="4,0" RowSpacing="14">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" Spacing="12">
-            <TextBlock Text="运行日志" Style="{StaticResource PageTitleStyle}"/>
-            <Border x:Name="HistoryCountBadge" Background="{StaticResource SurfaceBrush}"
-                    BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1"
-                    CornerRadius="4" Padding="8,3" VerticalAlignment="Center" Visibility="Collapsed">
-                <TextBlock x:Name="HistoryCountText" Foreground="{StaticResource MutedTextBrush}" FontSize="11"/>
-            </Border>
-        </StackPanel>
+        <Grid Grid.Row="0" RowSpacing="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
-        <!-- Tabs -->
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="4">
-            <Button x:Name="CurrentLogBtn" Content="本次执行" Click="CurrentLogBtn_Click"
-                    CornerRadius="8" Padding="16,8" FontWeight="SemiBold" FontSize="13"/>
-            <Button x:Name="HistoryBtn" Content="历史记录" Click="HistoryBtn_Click"
-                    CornerRadius="8" Padding="16,8" FontSize="13"/>
-            <Border Width="1" Background="{StaticResource DividerBrush}" Margin="8,4"/>
-            <Button x:Name="ClearBtn" Content="清空本次" Click="ClearBtn_Click"
-                    CornerRadius="8" Padding="16,8" FontSize="13"/>
-        </StackPanel>
+            <Grid ColumnSpacing="12" HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
 
-        <!-- Log content -->
-        <Border Grid.Row="2" Background="{StaticResource SurfaceBrush}" CornerRadius="12"
-                BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1" Padding="16">
-            <Grid>
-                <!-- Current execution log (color-coded) -->
-                <ScrollViewer x:Name="CurrentLogScroll" VerticalScrollBarVisibility="Auto">
-                    <ItemsControl x:Name="CurrentLogList">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Text}" FontFamily="Cascadia Code,Consolas"
-                                           FontSize="12" Foreground="{Binding Color}" Margin="0,1"/>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
+                <Border Style="{StaticResource StatCardStyle}" MinHeight="106">
+                    <Grid>
+                        <FontIcon Glyph="&#xE916;" FontSize="18" Foreground="{StaticResource SafeBrush}" Opacity="0.75" HorizontalAlignment="Right"/>
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="本周优化次数" Foreground="{StaticResource MutedTextBrush}" FontSize="12"/>
+                            <TextBlock x:Name="WeekCountText" Text="0" Foreground="{StaticResource TitleTextBrush}" FontSize="28" FontWeight="SemiBold"/>
+                            <TextBlock x:Name="WeekHintText" Text="近 7 天执行" Foreground="{StaticResource SubtleTextBrush}" FontSize="12"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
 
-                <!-- History list -->
-                <ScrollViewer x:Name="HistoryScroll" VerticalScrollBarVisibility="Auto" Visibility="Collapsed">
-                    <ItemsControl x:Name="HistoryList">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <Border Background="{StaticResource SurfaceElevatedBrush}" CornerRadius="6"
-                                        Padding="12,8" Margin="0,0,0,4">
-                                    <Grid ColumnSpacing="12">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto"/>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Grid.Column="0" Text="{Binding Timestamp}"
-                                                   Foreground="{StaticResource SubtleTextBrush}"
-                                                   FontSize="11" FontFamily="Cascadia Code,Consolas"
-                                                   VerticalAlignment="Center"/>
-                                        <TextBlock Grid.Column="1" Text="{Binding ProcessName}"
-                                                   Foreground="{StaticResource BodyTextBrush}"
-                                                   FontSize="13" VerticalAlignment="Center"/>
-                                        <Border Grid.Column="2" Style="{StaticResource TagBadgeStyle}"
-                                                Background="{Binding ActionBg}" VerticalAlignment="Center">
-                                            <TextBlock Text="{Binding Action}" Foreground="{StaticResource BodyTextBrush}" FontSize="11"/>
-                                        </Border>
-                                    </Grid>
-                                </Border>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </ScrollViewer>
+                <Border Grid.Column="1" Style="{StaticResource StatCardStyle}" MinHeight="106">
+                    <Grid>
+                        <FontIcon Glyph="&#xE9D9;" FontSize="18" Foreground="{StaticResource AccentLightBrush}" Opacity="0.75" HorizontalAlignment="Right"/>
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="累计释放内存" Foreground="{StaticResource MutedTextBrush}" FontSize="12"/>
+                            <TextBlock x:Name="ReleasedMemoryText" Text="0 MB" Foreground="{StaticResource TitleTextBrush}" FontSize="28" FontWeight="SemiBold"/>
+                            <TextBlock Text="根据成功关闭项估算" Foreground="{StaticResource SubtleTextBrush}" FontSize="12"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
 
-                <!-- Empty state -->
-                <StackPanel x:Name="EmptyState" HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="8">
-                    <FontIcon Glyph="&#xE8FD;" FontSize="40" Foreground="{StaticResource EmptyIconBrush}"
-                              HorizontalAlignment="Center"/>
-                    <TextBlock x:Name="EmptyText" Text="暂无日志"
-                               Foreground="{StaticResource MutedTextBrush}" FontSize="14"
-                               HorizontalAlignment="Center"/>
-                </StackPanel>
+                <Border Grid.Column="2" Style="{StaticResource StatCardStyle}" MinHeight="106">
+                    <Grid>
+                        <FontIcon Glyph="&#xE74C;" FontSize="18" Foreground="{StaticResource PurpleBrush}" Opacity="0.75" HorizontalAlignment="Right"/>
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="关闭应用数量" Foreground="{StaticResource MutedTextBrush}" FontSize="12"/>
+                            <TextBlock x:Name="ClosedAppsText" Text="0" Foreground="{StaticResource TitleTextBrush}" FontSize="28" FontWeight="SemiBold"/>
+                            <TextBlock Text="累计已关闭" Foreground="{StaticResource SubtleTextBrush}" FontSize="12"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <Border Grid.Column="3" Style="{StaticResource StatCardStyle}" MinHeight="106">
+                    <Grid>
+                        <FontIcon Glyph="&#xE783;" FontSize="18" Foreground="{StaticResource DangerBrush}" Opacity="0.65" HorizontalAlignment="Right"/>
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="失败次数" Foreground="{StaticResource MutedTextBrush}" FontSize="12"/>
+                            <TextBlock x:Name="FailureCountText" Text="0" Foreground="{StaticResource DangerBrush}" FontSize="28" FontWeight="SemiBold"/>
+                            <TextBlock x:Name="FailureHintText" Text="未关闭项目" Foreground="{StaticResource SubtleTextBrush}" FontSize="12"/>
+                        </StackPanel>
+                    </Grid>
+                </Border>
             </Grid>
-        </Border>
+
+            <Grid Grid.Row="1" ColumnSpacing="10" HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.5*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Style="{StaticResource HeroProcessBadgeStyle}" Padding="12,9" HorizontalAlignment="Stretch">
+                    <Grid ColumnSpacing="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <FontIcon Glyph="&#xE72E;" FontSize="16" Foreground="{StaticResource SafeBrush}" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="1" Text="所有记录仅保存在本机，不会上送" Foreground="{StaticResource BodyTextBrush}" FontSize="12" TextTrimming="CharacterEllipsis"/>
+                    </Grid>
+                </Border>
+
+                <Button Grid.Column="1" Click="ExportHistory_Click" Style="{StaticResource SubtleButtonStyle}" MinHeight="40" HorizontalAlignment="Stretch">
+                    <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                        <FontIcon Glyph="&#xE74E;" FontSize="14" Foreground="{StaticResource AccentLightBrush}"/>
+                        <TextBlock Text="导出记录" Foreground="{StaticResource BodyTextBrush}" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+                <Button Grid.Column="2" Click="ClearHistory_Click" Style="{StaticResource SubtleButtonStyle}" MinHeight="40" HorizontalAlignment="Stretch">
+                    <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                        <FontIcon Glyph="&#xE74D;" FontSize="14" Foreground="{StaticResource DangerBrush}"/>
+                        <TextBlock Text="清空记录" Foreground="{StaticResource DangerBrush}" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+
+                <Button Grid.Column="3" Click="ShowFailures_Click" Style="{StaticResource SubtleButtonStyle}" MinHeight="40" HorizontalAlignment="Stretch">
+                    <StackPanel Orientation="Horizontal" Spacing="8" HorizontalAlignment="Center">
+                        <FontIcon Glyph="&#xE7BA;" FontSize="14" Foreground="{StaticResource CopperBrush}"/>
+                        <TextBlock Text="查看失败项" Foreground="{StaticResource CopperBrush}" FontWeight="SemiBold"/>
+                    </StackPanel>
+                </Button>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="1" ColumnSpacing="14">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1.05*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+
+            <Border Style="{StaticResource CardBorderStyle}" Padding="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Border Padding="20,16" BorderBrush="{StaticResource DividerBrush}" BorderThickness="0,0,0,1">
+                        <Grid>
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <TextBlock Text="清理历史" Foreground="{StaticResource TitleTextBrush}" FontSize="16" FontWeight="SemiBold"/>
+                                <Border x:Name="HistoryCountBadge" Background="{StaticResource SurfaceElevatedBrush}" BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1" CornerRadius="7" Padding="8,2" VerticalAlignment="Center" Visibility="Collapsed">
+                                    <TextBlock x:Name="HistoryCountText" Foreground="{StaticResource BodyTextBrush}" FontSize="11" FontWeight="Medium"/>
+                                </Border>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Border Grid.Row="1" Padding="20,11" BorderBrush="{StaticResource DividerBrush}" BorderThickness="0,0,0,1">
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1.65*"/>
+                                <ColumnDefinition Width="1*"/>
+                                <ColumnDefinition Width="1.05*"/>
+                                <ColumnDefinition Width="0.9*"/>
+                                <ColumnDefinition Width="0.75*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="时间" Style="{StaticResource ColumnHeaderStyle}"/>
+                            <TextBlock Grid.Column="1" Text="关闭应用" Style="{StaticResource ColumnHeaderStyle}" HorizontalAlignment="Center"/>
+                            <TextBlock Grid.Column="2" Text="释放内存" Style="{StaticResource ColumnHeaderStyle}" HorizontalAlignment="Center"/>
+                            <TextBlock Grid.Column="3" Text="结果" Style="{StaticResource ColumnHeaderStyle}" HorizontalAlignment="Center"/>
+                            <TextBlock Grid.Column="4" Text="失败项" Style="{StaticResource ColumnHeaderStyle}" HorizontalAlignment="Center"/>
+                        </Grid>
+                    </Border>
+
+                    <Grid Grid.Row="2">
+                        <ListView x:Name="HistorySessionsList"
+                                  Background="Transparent"
+                                  BorderThickness="0"
+                                  IsItemClickEnabled="True"
+                                  SelectionMode="Single"
+                                  SelectionChanged="HistorySessionsList_SelectionChanged">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="ListViewItem">
+                                    <Setter Property="Padding" Value="0"/>
+                                    <Setter Property="Margin" Value="0"/>
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                    <Setter Property="MinHeight" Value="0"/>
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding SectionHeader}"
+                                                   Visibility="{Binding SectionHeaderVisibility}"
+                                                   Foreground="{StaticResource MutedTextBrush}"
+                                                   FontSize="12"
+                                                   FontWeight="SemiBold"
+                                                   Margin="20,14,0,6"/>
+                                        <Border BorderBrush="{StaticResource DividerBrush}" BorderThickness="0,0,0,1" Padding="20,12">
+                                            <Grid ColumnSpacing="12">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="1.65*"/>
+                                                    <ColumnDefinition Width="1*"/>
+                                                    <ColumnDefinition Width="1.05*"/>
+                                                    <ColumnDefinition Width="0.9*"/>
+                                                    <ColumnDefinition Width="0.75*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel Spacing="2" MinWidth="0">
+                                                    <TextBlock Text="{Binding TimestampText}" Foreground="{StaticResource BodyTextBrush}" FontSize="13" FontFamily="Cascadia Code,Consolas" TextTrimming="CharacterEllipsis"/>
+                                                    <TextBlock Text="{Binding RelativeText}" Foreground="{StaticResource SubtleTextBrush}" FontSize="11" TextTrimming="CharacterEllipsis"/>
+                                                </StackPanel>
+                                                <TextBlock Grid.Column="1" Text="{Binding ClosedCountText}" Foreground="{StaticResource BodyTextBrush}" FontSize="13" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                <TextBlock Grid.Column="2" Text="{Binding MemoryText}" Foreground="{StaticResource BodyTextBrush}" FontSize="13" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                <Border Grid.Column="3" Background="{Binding ResultBackground}" CornerRadius="10" Padding="8,4" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                    <TextBlock Text="{Binding ResultText}" Foreground="{Binding ResultForeground}" FontSize="12" FontWeight="SemiBold"/>
+                                                </Border>
+                                                <TextBlock Grid.Column="4" Text="{Binding FailedCountText}" Foreground="{Binding FailedForeground}" FontSize="13" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Grid>
+                                        </Border>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+
+                        <Border x:Name="HistoryEmptyState"
+                                Background="{StaticResource SurfaceBrush}"
+                                BorderBrush="{StaticResource StrokeBrush}"
+                                BorderThickness="1"
+                                CornerRadius="12"
+                                Padding="42"
+                                Margin="18"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Top"
+                                Visibility="Collapsed">
+                            <StackPanel Spacing="8" HorizontalAlignment="Center">
+                                <FontIcon Glyph="&#xE8FD;" FontSize="38" Foreground="{StaticResource EmptyIconBrush}" HorizontalAlignment="Center"/>
+                                <TextBlock Text="暂无清理记录" Foreground="{StaticResource MutedTextBrush}" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                                <TextBlock Text="执行一键优化后，这里会按时间归档每次结果。" Foreground="{StaticResource SubtleTextBrush}" FontSize="12" HorizontalAlignment="Center" TextAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <Border Grid.Row="3" Padding="20,12" BorderBrush="{StaticResource DividerBrush}" BorderThickness="0,1,0,0">
+                        <TextBlock x:Name="HistoryFooterText" Text="清理记录仅保存在本机设备，用于回顾优化结果与排查问题。" Foreground="{StaticResource MutedTextBrush}" FontSize="12"/>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <Border Grid.Column="1" Style="{StaticResource CardBorderStyle}" Padding="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+
+                    <Border Padding="20,16" BorderBrush="{StaticResource DividerBrush}" BorderThickness="0,0,0,1">
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Spacing="3">
+                                <TextBlock Text="记录详情" Foreground="{StaticResource TitleTextBrush}" FontSize="16" FontWeight="SemiBold"/>
+                                <TextBlock x:Name="DetailTimestampText" Text="选择一条清理历史查看详情" Foreground="{StaticResource SubtleTextBrush}" FontSize="12"/>
+                            </StackPanel>
+                            <Border x:Name="DetailStatusBadge" Grid.Column="1" Background="{StaticResource MutedSoftBrush}" CornerRadius="10" Padding="10,4" VerticalAlignment="Center" Visibility="Collapsed">
+                                <TextBlock x:Name="DetailStatusText" Text="-" Foreground="{StaticResource BodyTextBrush}" FontSize="12" FontWeight="SemiBold"/>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <Grid Grid.Row="1">
+                        <ScrollViewer x:Name="DetailScrollViewer" VerticalScrollBarVisibility="Auto">
+                            <StackPanel Padding="20" Spacing="16">
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Border Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1" CornerRadius="12" Padding="14,10">
+                                        <StackPanel Spacing="4">
+                                            <TextBlock Text="关闭应用" Foreground="{StaticResource MutedTextBrush}" FontSize="12"/>
+                                            <TextBlock x:Name="DetailClosedCountText" Text="0 个" Foreground="{StaticResource TitleTextBrush}" FontSize="20" FontWeight="SemiBold"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <Border Grid.Column="1" Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1" CornerRadius="12" Padding="14,10">
+                                        <StackPanel Spacing="4">
+                                            <TextBlock Text="释放内存" Foreground="{StaticResource MutedTextBrush}" FontSize="12"/>
+                                            <TextBlock x:Name="DetailMemoryText" Text="0 MB" Foreground="{StaticResource TitleTextBrush}" FontSize="20" FontWeight="SemiBold"/>
+                                        </StackPanel>
+                                    </Border>
+
+                                    <Border Grid.Column="2" Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1" CornerRadius="12" Padding="14,10">
+                                        <StackPanel Spacing="4">
+                                            <TextBlock Text="失败项" Foreground="{StaticResource MutedTextBrush}" FontSize="12"/>
+                                            <TextBlock x:Name="DetailFailedCountText" Text="0 个" Foreground="{StaticResource DangerBrush}" FontSize="20" FontWeight="SemiBold"/>
+                                        </StackPanel>
+                                    </Border>
+                                </Grid>
+
+                                <StackPanel Spacing="10">
+                                    <TextBlock Text="关闭的应用" Foreground="{StaticResource TitleTextBrush}" FontSize="14" FontWeight="SemiBold"/>
+                                    <Border Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1" CornerRadius="12" Padding="0">
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+                                            <Border Padding="14,10" BorderBrush="{StaticResource DividerBrush}" BorderThickness="0,0,0,1">
+                                                <Grid ColumnSpacing="10">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="2*"/>
+                                                        <ColumnDefinition Width="0.9*"/>
+                                                        <ColumnDefinition Width="1.1*"/>
+                                                        <ColumnDefinition Width="0.9*"/>
+                                                        <ColumnDefinition Width="0.8*"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Text="应用名称" Style="{StaticResource ColumnHeaderStyle}"/>
+                                                    <TextBlock Grid.Column="1" Text="释放内存" Style="{StaticResource ColumnHeaderStyle}" HorizontalAlignment="Center"/>
+                                                    <TextBlock Grid.Column="2" Text="关闭方式" Style="{StaticResource ColumnHeaderStyle}" HorizontalAlignment="Center"/>
+                                                    <TextBlock Grid.Column="3" Text="白名单保护" Style="{StaticResource ColumnHeaderStyle}" HorizontalAlignment="Center"/>
+                                                    <TextBlock Grid.Column="4" Text="结果" Style="{StaticResource ColumnHeaderStyle}" HorizontalAlignment="Center"/>
+                                                </Grid>
+                                            </Border>
+
+                                            <ItemsControl x:Name="DetailApplicationsList" Grid.Row="1">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Border BorderBrush="{StaticResource DividerBrush}" BorderThickness="0,0,0,1" Padding="14,10">
+                                                            <Grid ColumnSpacing="10">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="2*"/>
+                                                                    <ColumnDefinition Width="0.9*"/>
+                                                                    <ColumnDefinition Width="1.1*"/>
+                                                                    <ColumnDefinition Width="0.9*"/>
+                                                                    <ColumnDefinition Width="0.8*"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <Grid ColumnSpacing="10" MinWidth="0">
+                                                                    <Grid.ColumnDefinitions>
+                                                                        <ColumnDefinition Width="Auto"/>
+                                                                        <ColumnDefinition Width="*"/>
+                                                                    </Grid.ColumnDefinitions>
+                                                                    <Grid Width="28" Height="28" VerticalAlignment="Center">
+                                                                        <Grid Visibility="{Binding FallbackIconVisibility}">
+                                                                            <Border Background="{Binding IconBackground}" CornerRadius="7"/>
+                                                                            <FontIcon Glyph="{Binding IconGlyph}" FontSize="12" Foreground="{Binding IconForeground}"/>
+                                                                        </Grid>
+                                                                        <Image Source="{Binding IconSource}" Visibility="{Binding IconImageVisibility}" Width="22" Height="22" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                    </Grid>
+                                                                    <StackPanel Grid.Column="1" Spacing="1" MinWidth="0" VerticalAlignment="Center">
+                                                                        <TextBlock Text="{Binding ProcessName}" Foreground="{StaticResource BodyTextBrush}" FontSize="12" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+                                                                        <TextBlock Text="{Binding PidText}" Foreground="{StaticResource SubtleTextBrush}" FontSize="10" TextTrimming="CharacterEllipsis"/>
+                                                                    </StackPanel>
+                                                                </Grid>
+                                                                <TextBlock Grid.Column="1" Text="{Binding MemoryText}" Foreground="{StaticResource MutedTextBrush}" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                <TextBlock Grid.Column="2" Text="{Binding ActionText}" Foreground="{StaticResource BodyTextBrush}" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center" TextTrimming="CharacterEllipsis"/>
+                                                                <TextBlock Grid.Column="3" Text="{Binding ProtectionText}" Foreground="{StaticResource MutedTextBrush}" FontSize="12" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                <TextBlock Grid.Column="4" Text="{Binding ResultText}" Foreground="{Binding ResultForeground}" FontSize="12" FontWeight="SemiBold" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                            </Grid>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </Grid>
+                                    </Border>
+                                </StackPanel>
+
+                                <StackPanel Spacing="10">
+                                    <Grid>
+                                        <TextBlock Text="日志详情" Foreground="{StaticResource TitleTextBrush}" FontSize="14" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                                        <Button Click="CopyLog_Click" Style="{StaticResource SubtleButtonStyle}" Padding="12,6" HorizontalAlignment="Right" MinHeight="32">
+                                            <StackPanel Orientation="Horizontal" Spacing="6">
+                                                <FontIcon Glyph="&#xE8C8;" FontSize="12" Foreground="{StaticResource BodyTextBrush}"/>
+                                                <TextBlock Text="复制日志" Foreground="{StaticResource BodyTextBrush}" FontSize="12"/>
+                                            </StackPanel>
+                                        </Button>
+                                    </Grid>
+                                    <Border Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1" CornerRadius="12" Padding="14" MinHeight="150">
+                                        <ScrollViewer MaxHeight="190" VerticalScrollBarVisibility="Auto">
+                                            <ItemsControl x:Name="DetailLogList">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding Text}" Foreground="{Binding Color}" FontFamily="Cascadia Code,Consolas" FontSize="11" Margin="0,1" TextWrapping="NoWrap"/>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </ScrollViewer>
+                                    </Border>
+                                </StackPanel>
+                            </StackPanel>
+                        </ScrollViewer>
+
+                        <Border x:Name="DetailEmptyState"
+                                Background="{StaticResource SurfaceBrush}"
+                                BorderBrush="{StaticResource StrokeBrush}"
+                                BorderThickness="1"
+                                CornerRadius="12"
+                                Padding="42"
+                                Margin="20"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Top"
+                                Visibility="Collapsed">
+                            <StackPanel Spacing="8" HorizontalAlignment="Center">
+                                <FontIcon Glyph="&#xE946;" FontSize="38" Foreground="{StaticResource EmptyIconBrush}" HorizontalAlignment="Center"/>
+                                <TextBlock Text="选择一条记录查看详情" Foreground="{StaticResource MutedTextBrush}" FontSize="14" FontWeight="SemiBold" HorizontalAlignment="Center"/>
+                                <TextBlock Text="每次清理的应用、内存释放和失败原因会在这里展开。" Foreground="{StaticResource SubtleTextBrush}" FontSize="12" HorizontalAlignment="Center" TextAlignment="Center"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </Border>
+        </Grid>
+
+        <TextBlock x:Name="FooterHintText"
+                   Grid.Row="2"
+                   Text="提示：清理记录用于回看优化结果，若发现失败项，可在后台进程页查看对应应用并调整白名单或强制策略。"
+                   Foreground="{StaticResource MutedTextBrush}"
+                   FontSize="12"
+                   TextWrapping="Wrap"/>
     </Grid>
 </Page>

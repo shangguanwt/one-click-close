@@ -1,5 +1,6 @@
-﻿using Microsoft.UI.Xaml;
+using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
+using Windows.UI;
 
 namespace OneClickClose.WinUI.Helpers;
 
@@ -9,43 +10,46 @@ namespace OneClickClose.WinUI.Helpers;
 public static class ColorHelper
 {
     public static SolidColorBrush Safe =>
-        (SolidColorBrush)Application.Current.Resources["SafeBrush"];
+        Brush("SafeBrush", Color.FromArgb(255, 40, 165, 110));
 
     public static SolidColorBrush SafeGreenSoft =>
-        (SolidColorBrush)Application.Current.Resources["SafeSoftBrush"];
+        Brush("SafeSoftBrush", Color.FromArgb(38, 40, 165, 110));
 
     public static SolidColorBrush Copper =>
-        (SolidColorBrush)Application.Current.Resources["CopperBrush"];
+        Brush("CopperBrush", Color.FromArgb(255, 190, 118, 48));
 
     public static SolidColorBrush CopperSoft =>
-        (SolidColorBrush)Application.Current.Resources["CopperSoftBrush"];
+        Brush("CopperSoftBrush", Color.FromArgb(38, 190, 118, 48));
 
     public static SolidColorBrush Danger =>
-        (SolidColorBrush)Application.Current.Resources["DangerBrush"];
+        Brush("DangerBrush", Color.FromArgb(255, 210, 80, 80));
 
     public static SolidColorBrush DangerSoft =>
-        (SolidColorBrush)Application.Current.Resources["DangerSoftBrush"];
+        Brush("DangerSoftBrush", Color.FromArgb(38, 210, 80, 80));
 
     public static SolidColorBrush MutedSoft =>
-        (SolidColorBrush)Application.Current.Resources["MutedSoftBrush"];
+        Brush("MutedSoftBrush", Color.FromArgb(34, 100, 116, 139));
+
+    public static SolidColorBrush BodyText =>
+        Brush("BodyTextBrush", Color.FromArgb(255, 34, 43, 58));
 
     public static SolidColorBrush Accent =>
-        (SolidColorBrush)Application.Current.Resources["AccentBrush"];
+        Brush("AccentBrush", Color.FromArgb(255, 49, 122, 204));
 
     public static SolidColorBrush AccentLight =>
-        (SolidColorBrush)Application.Current.Resources["AccentLightBrush"];
+        Brush("AccentLightBrush", Color.FromArgb(255, 82, 151, 224));
 
     public static SolidColorBrush Purple =>
-        (SolidColorBrush)Application.Current.Resources["PurpleBrush"];
+        Brush("PurpleBrush", Color.FromArgb(255, 126, 101, 228));
 
     public static SolidColorBrush PurpleSoft =>
-        (SolidColorBrush)Application.Current.Resources["PurpleSoftBrush"];
+        Brush("PurpleSoftBrush", Color.FromArgb(38, 126, 101, 228));
 
     public static SolidColorBrush CyanSoft =>
-        (SolidColorBrush)Application.Current.Resources["CyanSoftBrush"];
+        Brush("CyanSoftBrush", Color.FromArgb(38, 46, 168, 216));
 
     public static SolidColorBrush Info =>
-        (SolidColorBrush)Application.Current.Resources["SubtleTextBrush"];
+        Brush("SubtleTextBrush", Color.FromArgb(255, 100, 116, 139));
 
     public static SolidColorBrush GetActionBackground(string action)
     {
@@ -56,5 +60,11 @@ public static class ColorHelper
         if (action == Core.ProcessPlanner.ActionReport)
             return DangerSoft;
         return MutedSoft;
+    }
+
+    private static SolidColorBrush Brush(string key, Color fallback)
+    {
+        object value = Application.Current?.Resources?[key];
+        return value as SolidColorBrush ?? new SolidColorBrush(fallback);
     }
 }

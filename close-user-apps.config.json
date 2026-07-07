@@ -2,6 +2,10 @@
   "waitSeconds": 5,
   "gracefulTimeoutSeconds": 5,
   "queryTimeoutSeconds": 3,
+  "autoDetectUserApps": true,
+  "closeShutdownBlockingApps": true,
+  "candidateMemoryThresholdMb": 128,
+  "forceAfterGracefulFailure": true,
   "targetNames": [
     "chrome",
     "msedge",
@@ -11,7 +15,12 @@
     "Spotify",
     "Slack",
     "notepad",
-    "Code"
+    "Code",
+    "Weixin",
+    "TIM",
+    "QQExternal",
+    "TXPlatform",
+    "WeChatAppEx"
   ],
   "protectedNames": [
     "ApplicationFrameHost",

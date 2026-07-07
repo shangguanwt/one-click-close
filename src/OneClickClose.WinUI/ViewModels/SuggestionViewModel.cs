@@ -21,7 +21,7 @@ public class SuggestionViewModel
         Reason = suggestion.Reason ?? "";
         Count = suggestion.Count;
 
-        TypeBg = suggestion.Type == "保护名单"
+        TypeBg = suggestion.Type == "保护名单" || suggestion.Type == "习惯关闭"
             ? ColorHelper.Accent
             : ColorHelper.CopperSoft;
     }

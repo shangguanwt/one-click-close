@@ -1,0 +1,46 @@
+<svg width="1100" height="360" viewBox="0 0 1100 360" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">GitHub readiness pipeline</title>
+  <desc id="desc">A visual pipeline for preparing OneClickClose before publishing on GitHub.</desc>
+  <defs>
+    <linearGradient id="card" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#FFFFFF"/>
+      <stop offset="1" stop-color="#EEF6FF"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#35A6FF"/>
+      <stop offset="1" stop-color="#7657FF"/>
+    </linearGradient>
+  </defs>
+  <rect width="1100" height="360" rx="30" fill="#F4F8FC"/>
+  <text x="56" y="66" fill="#142033" font-family="Segoe UI, Arial, sans-serif" font-size="31" font-weight="800">上线前检查流</text>
+  <text x="56" y="96" fill="#64748B" font-family="Segoe UI, Arial, sans-serif" font-size="16">GitHub readiness pipeline for docs, CI, safety, and release gates.</text>
+  <g>
+    <rect x="56" y="142" width="185" height="120" rx="22" fill="url(#card)" stroke="#C8D7E7"/>
+    <circle cx="92" cy="180" r="18" fill="url(#accent)"/>
+    <text x="120" y="186" fill="#142033" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="750">仓库卫生</text>
+    <text x="80" y="224" fill="#64748B" font-family="Segoe UI, Arial, sans-serif" font-size="14">Ignore local files</text>
+  </g>
+  <path d="M256 202H326" stroke="#8BA3C7" stroke-width="4" stroke-linecap="round"/>
+  <path d="M316 190L336 202L316 214" stroke="#8BA3C7" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <g>
+    <rect x="350" y="142" width="185" height="120" rx="22" fill="url(#card)" stroke="#C8D7E7"/>
+    <circle cx="386" cy="180" r="18" fill="url(#accent)"/>
+    <text x="414" y="186" fill="#142033" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="750">文档说明</text>
+    <text x="374" y="224" fill="#64748B" font-family="Segoe UI, Arial, sans-serif" font-size="14">Bilingual docs</text>
+  </g>
+  <path d="M550 202H620" stroke="#8BA3C7" stroke-width="4" stroke-linecap="round"/>
+  <path d="M610 190L630 202L610 214" stroke="#8BA3C7" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <g>
+    <rect x="644" y="142" width="185" height="120" rx="22" fill="url(#card)" stroke="#C8D7E7"/>
+    <circle cx="680" cy="180" r="18" fill="url(#accent)"/>
+    <text x="708" y="186" fill="#142033" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="750">CI 验证</text>
+    <text x="668" y="224" fill="#64748B" font-family="Segoe UI, Arial, sans-serif" font-size="14">Restore, test, build</text>
+  </g>
+  <path d="M844 202H914" stroke="#8BA3C7" stroke-width="4" stroke-linecap="round"/>
+  <path d="M904 190L924 202L904 214" stroke="#8BA3C7" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <g>
+    <rect x="938" y="142" width="110" height="120" rx="22" fill="url(#card)" stroke="#C8D7E7"/>
+    <text x="969" y="186" fill="#142033" font-family="Segoe UI, Arial, sans-serif" font-size="19" font-weight="750">发布</text>
+    <text x="958" y="224" fill="#64748B" font-family="Segoe UI, Arial, sans-serif" font-size="14">Release</text>
+  </g>
+</svg>
