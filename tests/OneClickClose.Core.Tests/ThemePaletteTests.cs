@@ -1,4 +1,4 @@
-using OneClickClose.WinUI.Services;
+using OneClickClose.Core;
 
 namespace OneClickClose.Core.Tests;
 

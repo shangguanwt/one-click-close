@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\OneClickClose.Core\OneClickClose.Core.csproj" />
-    <ProjectReference Include="..\..\src\OneClickClose.WinUI\OneClickClose.WinUI.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,5 +1,6 @@
 using System;
 using System.Runtime.InteropServices;
+using OneClickClose.Core;
 
 namespace OneClickClose.WinUI.Services;
 

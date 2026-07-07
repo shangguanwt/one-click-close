@@ -1,5 +1,4 @@
 using OneClickClose.Core;
-using OneClickClose.WinUI.ViewModels;
 
 namespace OneClickClose.Core.Tests;
 
@@ -283,10 +282,10 @@ public sealed class ProcessPlannerTests
     }
 }
 
-public sealed class CandidateRowViewModelTests
+public sealed class ProcessGroupSearchTextTests
 {
     [Fact]
-    public void SearchText_UsesRawChildFieldsWithoutMaterializingChildren()
+    public void Build_UsesRawChildFields()
     {
         var row = new ProcessGroupRow
         {
@@ -312,17 +311,10 @@ public sealed class CandidateRowViewModelTests
             }
         };
 
-        var vm = new CandidateRowViewModel(row, new AppConfig { targetNames = new[] { "Weixin" } });
+        string searchText = ProcessGroupSearchText.Build(row);
 
-        Assert.Contains("wechat main", vm.SearchText);
-        Assert.Contains("1234", vm.SearchText);
-
-        var lazyField = typeof(CandidateRowViewModel).GetField("_children", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-        Assert.NotNull(lazyField);
-        Assert.Null(lazyField!.GetValue(vm));
-
-        Assert.Single(vm.Children);
-        Assert.NotNull(lazyField.GetValue(vm));
+        Assert.Contains("wechat main", searchText);
+        Assert.Contains("1234", searchText);
     }
 }
 

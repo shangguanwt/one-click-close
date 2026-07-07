@@ -106,7 +106,7 @@ public class CandidateRowViewModel : INotifyPropertyChanged
         IconGlyph = GetGroupGlyph(row);
         ChildCount = row.Children?.Count ?? 0;
         HasChildren = ChildCount > 0;
-        SearchText = BuildSearchText(row);
+        SearchText = ProcessGroupSearchText.Build(row);
     }
 
     public async Task EnsureIconLoadedAsync()
@@ -132,35 +132,6 @@ public class CandidateRowViewModel : INotifyPropertyChanged
         return (Raw.Children ?? new List<ProcessRecord>())
             .Select(r => new CandidateChildRowViewModel(r, _config))
             .ToList();
-    }
-
-    private static string BuildSearchText(ProcessGroupRow row)
-    {
-        var parts = new List<string>
-        {
-            row.Process,
-            row.Note,
-            row.Action,
-            row.Status,
-            row.Path,
-            row.UsageHint,
-            row.HabitHint
-        };
-
-        foreach (ProcessRecord child in row.Children ?? new List<ProcessRecord>())
-        {
-            parts.Add(child.Id.ToString());
-            parts.Add(child.ProcessName);
-            parts.Add(child.Action);
-            parts.Add(child.Status);
-            parts.Add(child.MainWindowTitle);
-            parts.Add(child.Path);
-            parts.Add(child.Reason);
-            parts.Add(child.UsageHint);
-            parts.Add(child.HabitHint);
-        }
-
-        return string.Join(" ", parts.Where(p => !string.IsNullOrWhiteSpace(p))).ToLowerInvariant();
     }
 
     private void OnPropertyChanged([CallerMemberName] string propertyName = null)

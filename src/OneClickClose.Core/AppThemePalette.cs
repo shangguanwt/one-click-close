@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using Windows.UI;
 
-namespace OneClickClose.WinUI.Services;
+namespace OneClickClose.Core;
 
 public sealed class AppThemePalette
 {
@@ -305,25 +304,27 @@ public sealed class AppThemePalette
         return new ThemeBrushToken(key, Color(a, r, g, b));
     }
 
-    private static ThemeGradientToken Gradient(string key, params Color[] stops)
+    private static ThemeGradientToken Gradient(string key, params ThemeColor[] stops)
     {
         return new ThemeGradientToken(key, stops);
     }
 
-    private static Color Color(byte a, byte r, byte g, byte b)
+    private static ThemeColor Color(byte a, byte r, byte g, byte b)
     {
-        return Windows.UI.Color.FromArgb(a, r, g, b);
+        return new ThemeColor(a, r, g, b);
     }
 }
 
-public readonly record struct ThemeBrushToken(string Key, Color Color);
+public readonly record struct ThemeColor(byte A, byte R, byte G, byte B);
 
-public readonly record struct ThemeGradientToken(string Key, IReadOnlyList<Color> Stops);
+public readonly record struct ThemeBrushToken(string Key, ThemeColor Color);
+
+public readonly record struct ThemeGradientToken(string Key, IReadOnlyList<ThemeColor> Stops);
 
 public readonly record struct TitleBarPalette(
-    Color Foreground,
-    Color InactiveForeground,
-    Color HoverBackground,
-    Color HoverForeground,
-    Color PressedBackground,
-    Color PressedForeground);
+    ThemeColor Foreground,
+    ThemeColor InactiveForeground,
+    ThemeColor HoverBackground,
+    ThemeColor HoverForeground,
+    ThemeColor PressedBackground,
+    ThemeColor PressedForeground);

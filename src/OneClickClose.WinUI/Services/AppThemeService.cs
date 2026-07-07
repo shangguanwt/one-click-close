@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Microsoft.UI.Windowing;
 using Microsoft.UI.Xaml;
 using Microsoft.UI.Xaml.Media;
+using OneClickClose.Core;
 using Windows.UI;
 
 namespace OneClickClose.WinUI.Services;
@@ -24,7 +25,7 @@ public static class AppThemeService
     {
         foreach (ThemeBrushToken token in palette.Brushes)
         {
-            SetBrushResource(token.Key, token.Color);
+            SetBrushResource(token.Key, ToWindowsColor(token.Color));
         }
 
         foreach (ThemeGradientToken token in palette.Gradients)
@@ -40,12 +41,12 @@ public static class AppThemeService
         titleBar.InactiveBackgroundColor = Microsoft.UI.Colors.Transparent;
         titleBar.ButtonBackgroundColor = Microsoft.UI.Colors.Transparent;
         titleBar.ButtonInactiveBackgroundColor = Microsoft.UI.Colors.Transparent;
-        titleBar.ButtonForegroundColor = palette.TitleBar.Foreground;
-        titleBar.ButtonInactiveForegroundColor = palette.TitleBar.InactiveForeground;
-        titleBar.ButtonHoverBackgroundColor = palette.TitleBar.HoverBackground;
-        titleBar.ButtonHoverForegroundColor = palette.TitleBar.HoverForeground;
-        titleBar.ButtonPressedBackgroundColor = palette.TitleBar.PressedBackground;
-        titleBar.ButtonPressedForegroundColor = palette.TitleBar.PressedForeground;
+        titleBar.ButtonForegroundColor = ToWindowsColor(palette.TitleBar.Foreground);
+        titleBar.ButtonInactiveForegroundColor = ToWindowsColor(palette.TitleBar.InactiveForeground);
+        titleBar.ButtonHoverBackgroundColor = ToWindowsColor(palette.TitleBar.HoverBackground);
+        titleBar.ButtonHoverForegroundColor = ToWindowsColor(palette.TitleBar.HoverForeground);
+        titleBar.ButtonPressedBackgroundColor = ToWindowsColor(palette.TitleBar.PressedBackground);
+        titleBar.ButtonPressedForegroundColor = ToWindowsColor(palette.TitleBar.PressedForeground);
     }
 
     internal static void NotifyThemeResourcesChanged()
@@ -77,6 +78,17 @@ public static class AppThemeService
         }
     }
 
+    internal static void SetGradientResource(string key, IReadOnlyList<ThemeColor> colors)
+    {
+        var windowsColors = new Color[colors.Count];
+        for (int i = 0; i < colors.Count; i++)
+        {
+            windowsColors[i] = ToWindowsColor(colors[i]);
+        }
+
+        SetGradientResource(key, windowsColors);
+    }
+
     internal static void SetGradientResource(string key, IReadOnlyList<Color> colors)
     {
         object resource;
@@ -103,5 +115,10 @@ public static class AppThemeService
         {
             brush.GradientStops[i].Color = colors[i];
         }
+    }
+
+    private static Color ToWindowsColor(ThemeColor color)
+    {
+        return Color.FromArgb(color.A, color.R, color.G, color.B);
     }
 }
