@@ -4,7 +4,6 @@
   <kbd><a href="#readme-zh">中文</a></kbd>
   <kbd><a href="#readme-en">English</a></kbd>
   <kbd><a href="https://oneclick.03142023.xyz/">项目官网</a></kbd>
-  <kbd><a href="https://github.com/shangguanwt/one-click-close">GitHub</a></kbd>
   <kbd><a href="https://github.com/shangguanwt/one-click-close/releases/latest">下载 Release</a></kbd>
 </p>
 
@@ -36,7 +35,6 @@ English: The goal is not to kill everything, but to make background apps underst
 | 技术栈 / Stack | WinUI 3, Windows App SDK, .NET 9 |
 | 运行形态 / Runtime | Windows 便携 zip，未打包 WinUI / Portable Windows zip, unpackaged WinUI |
 | 项目官网 / Website | [oneclick.03142023.xyz](https://oneclick.03142023.xyz/) |
-| 源码仓库 / Repository | [github.com/shangguanwt/one-click-close](https://github.com/shangguanwt/one-click-close) |
 | 隐私边界 / Privacy | 进程列表、清理历史、习惯数据和硬件信息均保存在本机 / Process data, history, habits, and hardware state stay local |
 | 安全边界 / Safety | 关闭前确认，默认保护系统进程、白名单和高风险项 / Confirmation first, system and allowlisted processes protected |
 
@@ -198,7 +196,6 @@ English: OneClickClose keeps runtime data local and is scoped to explainable bac
 <p>
   <kbd><a href="#readme-zh">Back to Chinese</a></kbd>
   <kbd><a href="https://oneclick.03142023.xyz/">Website</a></kbd>
-  <kbd><a href="https://github.com/shangguanwt/one-click-close">GitHub</a></kbd>
   <kbd><a href="https://github.com/shangguanwt/one-click-close/releases/latest">Download Release</a></kbd>
 </p>
 
@@ -207,7 +204,6 @@ OneClickClose is a local-first WinUI 3 desktop utility for reviewing background 
 Project links:
 
 - Website: [oneclick.03142023.xyz](https://oneclick.03142023.xyz/)
-- GitHub: [github.com/shangguanwt/one-click-close](https://github.com/shangguanwt/one-click-close)
 - Latest release: [GitHub Releases](https://github.com/shangguanwt/one-click-close/releases/latest)
 
 ### Highlights
